@@ -3,17 +3,33 @@
 Created on Thu Apr 19 11:28:01 2018
 
 @author: pnola
+def kevrekidis(t,Y, eps=0.01):
+  return np.array([-Y[0]-Y[1]+2, 1/eps*(Y[0]**3-Y[1])])
+
+def ex11(t,Y):
+  return -np.array([np.tanh(Y[0]**2/4)+Y[0],Y[0]+2*Y[1]])
+
+def rotHoop(t,Y, eps=0.1, gamma=2.3):
+  return np.array([Y[1], 1/eps*(np.sin(Y[0])*(gamma*np.cos(Y[0])-1)-Y[1])])
+
+
+def verhulst(t,Y, eps=0.01):
+  return [1, 1/eps*(Y[0]*Y[1]-Y[1]**2)]
+
+
 """
 
 import numpy as np
 import scipy.integrate as sint
 import matplotlib.pyplot as plt
-from velocities import pendulum as vel_func
+#from velocities import van_der_pol_oscillator as vel_func
+from velocities import verhulst as vel_func
 from velocities import co
 plt.close('all')
 dimx = 101
 #dimy = int(np.ceil(dimx/2.5))
-dimy = int(np.ceil(dimx/2))
+#dimy = int(np.ceil(dimx/2))
+dimy = dimx
 t0 = 0
 tf = -5 #days
 
@@ -21,8 +37,8 @@ tf = -5 #days
 #y = np.linspace(-4000,4000,dimy)
 #x = np.linspace(-10,10,dimx)
 #y = np.linspace(-10,10,dimy)
-x = np.linspace(-5.2,5.2,dimx)
-y = np.linspace(-3,3,dimy)
+x = np.linspace(-1,1,dimx)
+y = np.linspace(-1,1,dimy)
 dx = x[1]-x[0]
 dy = y[1]-y[0]
 yout=np.empty([len(y)*len(x),2])

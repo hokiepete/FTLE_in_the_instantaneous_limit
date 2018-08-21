@@ -118,13 +118,31 @@ def weight(t,Y):
     v = (2*Y[0]-Y[0]*Y[1])*weight
     return [u,v]
 
+def van_der_pol_oscillator(t,Y,epsilon=0.01,a=0.575):
+    u = 1/epsilon*(Y[1]+Y[0]-Y[0]**3)
+    v = a - Y[0]
+    return [u,v]
+
+def kevrekidis(t,Y, eps=0.01):
+  return [-Y[0]-Y[1]+2, 1/eps*(Y[0]**3-Y[1])]
+
+def ex11(t,Y):
+  return [-(np.tanh(Y[0]**2/4)+Y[0]),-(Y[0]+2*Y[1])]
+
+def rotHoop(t,Y, eps=0.1, gamma=2.3):
+  return [Y[1], 1/eps*(np.sin(Y[0])*(gamma*np.cos(Y[0])-1)-Y[1])]
+
+
+def verhulst(t,Y, eps=0.01):
+  return [1, 1/eps*(Y[0]*Y[1]-Y[1]**2)]
+
 '''
-x = np.linspace(-2,2,11)
+
+x = np.linspace(-1,1,11)
 y = np.linspace(-1,1,11)
 x,y=np.meshgrid(x,y)
-u,v=glider(0,[x,y])
+u,v=ex11(0,[x,y])
 import matplotlib.pyplot as plt
 plt.close('all')
 plt.quiver(x,y,u,v)
-
 '''
