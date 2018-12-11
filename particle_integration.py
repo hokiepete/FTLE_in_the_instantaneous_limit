@@ -23,10 +23,10 @@ import numpy as np
 import scipy.integrate as sint
 import matplotlib.pyplot as plt
 #from velocities import van_der_pol_oscillator as vel_func
-from velocities import verhulst as vel_func
+from velocities import double_gyre as vel_func
 from velocities import co
 plt.close('all')
-dimx = 101
+dimx = 51
 #dimy = int(np.ceil(dimx/2.5))
 #dimy = int(np.ceil(dimx/2))
 dimy = dimx
