@@ -38,45 +38,7 @@ x = np.linspace(0,2,dimx)
 y = np.linspace(0,1,dimy)
 dx = x[1]-x[0]
 dy = y[1]-y[0]
-yout=np.empty([len(y)*len(x),2])
-yout2=np.empty([len(y)*len(x),2])
 
-x,y = np.meshgrid(x,y)
-for k,y0 in enumerate(zip(x.ravel(),y.ravel())):
-    print(k)
-    sol = sint.solve_ivp(vel_func,[t0,tf],y0,rtol=1e-8,atol=1e-8)
-    yout[k,:] = sol.y[:,-1]
-    
-fu,fv = zip(*yout)
-fu = np.reshape(fu,[dimy,dimx])
-fv = np.reshape(fv,[dimy,dimx])
-dfudy,dfudx = np.gradient(fu,dy,dx,edge_order=2)
-dfvdy,dfvdx = np.gradient(fv,dy,dx,edge_order=2)
-del fu,fv
-#JF = np.empty([dimy,dimx])
-sigma = np.empty([dimy,dimx])
-for i in range(dimy):
-    for j in range(dimx):
-        JF = np.array([[dfudx[i,j],dfudy[i,j]],[dfvdx[i,j],dfvdy[i,j]]])
-        C = np.dot(JF.T, JF)
-        lam=np.max(np.linalg.eig(C)[0])
-        if lam>=1:
-            sigma[i,j]=1.0/(2.0*abs(tf-t0))*np.log(lam)
-        else:
-            sigma[i,j]=0
-            #sigma[i,j]=1/(2.0*abs(tf-t0))*np.log(lam)
-del dfudy,dfudx,dfvdy,dfvdx
-
-
-plt.figure(1)
-plt.subplot(211)
-plt.contourf(x,y,sigma,levels=np.linspace(sigma.min(axis=None),sigma.max(axis=None),301))
-plt.colorbar()
-#pu,pv = vel_func(0,[x[::3,::3],y[::3,::3]])
-#plt.quiver(x[::3,::3],y[::3,::3],pu,pv)
-plt.title('$\\sigma$, integration time  t = {:}'.format(tf))
-
-#plt.gca().set_aspect('equal', adjustable='box', anchor='C')
 
 u,v = vel_func(0,[x,y])
 
@@ -103,6 +65,19 @@ plt.register_cmap(name='co', data=co())
 
 
 s1=-s1
+
+
+plt.figure(1)
+plt.subplot(211)
+plt.contourf(x,y,sigma,levels=np.linspace(sigma.min(axis=None),sigma.max(axis=None),301))
+plt.colorbar()
+#pu,pv = vel_func(0,[x[::3,::3],y[::3,::3]])
+#plt.quiver(x[::3,::3],y[::3,::3],pu,pv)
+plt.title('$\\sigma$, integration time  t = {:}'.format(tf))
+
+#plt.gca().set_aspect('equal', adjustable='box', anchor='C')
+
+
 plt.subplot(212)
 plt.contourf(x,y,s1,levels=np.linspace(s1.min(axis=None),s1.max(axis=None),301))
 plt.colorbar()

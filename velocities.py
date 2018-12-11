@@ -27,6 +27,11 @@ def double_gyre(t,Y,A = 0.1,w = np.pi*0.2,e = 0.25):
     v = np.pi*A*np.cos(np.pi*f)*np.sin(Y[1]*np.pi)*dfdx
     return [u,v]
 
+def auto_double_gyre(t,Y):
+    u =-np.pi*np.sin(np.pi*Y[0])*np.cos(Y[1]*np.pi)    
+    v = np.pi*np.cos(np.pi*Y[0])*np.sin(Y[1]*np.pi)
+    return [u,v]
+
 def bickley_jet(t,Y):
     #Scaled Down 4000
     U0=62.66 #m/s
