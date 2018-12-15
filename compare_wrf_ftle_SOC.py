@@ -167,7 +167,7 @@ for i,k in enumerate(time):
     fig=plt.figure(figsize=(12,5))
     #fig, ax = plt.subplots()
     plt.subplot(121)
-    k=-k
+    #k=-k
     sig=-s1-k*corr1
     #cs=m.pcolormesh(lon,lat,sig,latlon=True)
     cs=m.contourf(lon,lat,sig,levels=np.linspace(sig.min(axis=None),sig.max(axis=None),301),latlon=True)
@@ -179,7 +179,7 @@ for i,k in enumerate(time):
     m.drawmeridians(meridians,labels=[0,0,0,1],fontsize=10)
     #plt.colorbar()
     plt.colorbar( fraction=0.04, pad=0.04)
-    plt.title('$s_{1}-T\\left(*-s_{1}^{2}+0.5 \\langle \\langle \\xi_{s_{1}}, B \\rangle, \\xi_{s_{1}}\\rangle\\right)$'+' T = {0:1.3f} Days'.format(k))
+    plt.title('$s_{1}-T*\\left(-s_{1}^{2}+0.5 \\langle \\langle \\xi_{s_{1}}, B \\rangle, \\xi_{s_{1}}\\rangle\\right)$'+' T = {0:1.3f} Days'.format(k))
     
     f=ftle[-1-i,:,:]
     plt.subplot(122)
@@ -197,6 +197,6 @@ for i,k in enumerate(time):
     plt.colorbar( fraction=0.04, pad=0.04)
     plt.title('$\\sigma$')
     
-    plt.savefig('ftle_s1+HOT_comp_bwt_{:}.png'.format(i))
+    plt.savefig('ftle_s1+HOT_comp_{:}.png'.format(i))
     plt.close('all')
 #plt.axis('tight')
