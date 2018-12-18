@@ -151,7 +151,8 @@ m = Basemap(llcrnrlon=lon_min,
             area_thresh=1000.,
             )
 
-ncfile="ftle_80m.nc"
+#ncfile="ftle_80m.nc"
+ncfile="ftle_80m_1min_res.nc"
 root = Dataset(ncfile,'r') #read the data
 vars = root.variables #dictionary, all variables in dataset\
 print(vars.keys())
@@ -162,6 +163,7 @@ time = vars['time'][:]
 flon, flat = np.meshgrid(flon,flat)
 root.close()
 
+time-=time.min()
 for i,k in enumerate(time):
     print(i,k)
     fig=plt.figure(figsize=(12,5))
@@ -179,7 +181,7 @@ for i,k in enumerate(time):
     m.drawmeridians(meridians,labels=[0,0,0,1],fontsize=10)
     #plt.colorbar()
     plt.colorbar( fraction=0.04, pad=0.04)
-    plt.title('$s_{1}-T*\\left(-s_{1}^{2}+0.5 \\langle \\langle \\xi_{s_{1}}, B \\rangle, \\xi_{s_{1}}\\rangle\\right)$'+' T = {0:1.3f} Days'.format(k))
+    plt.title('$-s_{1}-T*\\left(-s_{1}^{2}+0.5 \\langle \\langle \\xi_{s_{1}}, B \\rangle, \\xi_{s_{1}}\\rangle\\right)$'+' T = {0:1.4f} Days'.format(k))
     
     f=ftle[-1-i,:,:]
     plt.subplot(122)
