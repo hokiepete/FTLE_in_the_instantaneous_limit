@@ -27,12 +27,12 @@ from velocities import double_gyre as vel_func
 #from velocities import auto_double_gyre as vel_func
 from velocities import co
 plt.close('all')
-dimx = 31
+dimx = 101
 #dimy = int(np.ceil(dimx/2.5))
 dimy = int(np.ceil(dimx/2))
 #dimy = 0.5*dimx
 t0 = 0
-tf = -1 #days
+tf = -15 #days
 
 x = np.linspace(0,2,dimx)
 y = np.linspace(0,1,dimy)

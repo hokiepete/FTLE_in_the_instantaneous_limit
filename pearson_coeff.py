@@ -17,6 +17,7 @@ vars = root.variables
 u = vars['eastward_vel'][:]
 v = vars['northward_vel'][:]
 root.close()
+
 u=u[-1,:,:]
 v=v[-1,:,:]
 
@@ -53,24 +54,27 @@ root = Dataset(ncfile,'r') #read the data
 vars = root.variables #dictionary, all variables in dataset\
 ftle = vars['FTLE'][:,:,:,0]#.reshape([ydim,xdim,tdim],order='C')
 root.close()
-t=7
-ftle_2hr = ftle[-t,:,:] - ftle[-t,:,:].min(axis=None)
-ftle_2hr = ftle_2hr/ftle_2hr.max(axis=None)
-ftle_2hr =  np.ma.filled(ftle_2hr,np.nan)
-t=13
-ftle_4hr = ftle[-t,:,:] - ftle[-t,:,:].min(axis=None)
-ftle_4hr = ftle_4hr/ftle_4hr.max(axis=None)
-ftle_4hr =  np.ma.filled(ftle_4hr,np.nan)
+data = [s1.ravel()]
+name = ['s1']
 
-t=25
-ftle_6hr = ftle[-t,:,:] - ftle[-t,:,:].min(axis=None)
-ftle_6hr = ftle_6hr/ftle_6hr.max(axis=None)
-ftle_6hr =  np.ma.filled(ftle_6hr,np.nan)
+timelen = ftle.shape[0]
+for tt in range(timelen):
+    if tt == 0:
+        continue
+    
+    #f = ftle[timelen-1-tt,:,:] - ftle[timelen-1-tt,:,:].min(axis=None)
+    f = ftle[-tt-1,:,:] - ftle[-tt-1,:,:].min(axis=None)
+    f = f/f.max(axis=None)
+    f =  np.ma.filled(f,np.nan)
+    data.append(f.ravel())
+    name.append('{0:2.3f}hr'.format(tt/6))
 
-Alldata = pd.DataFrame(np.transpose([s1.ravel(),ftle_2hr.ravel(),ftle_4hr.ravel(),ftle_6hr.ravel()]),columns=['s1','2hr','4hr','6hr'])
-Alldata.corr().to_csv('Correlation_and_stats.csv',mode='w')
+
+#Alldata = pd.DataFrame(np.transpose([s1.ravel(),ftle_2hr.ravel(),ftle_4hr.ravel(),ftle_6hr.ravel()]),columns=['s1','2hr','4hr','6hr'])
+Alldata = pd.DataFrame(np.transpose(data),columns=name)
+Alldata.corr().to_csv('Correlation_and_stats_v2.csv',mode='w')
 B=Alldata.describe()
-B.to_csv('Correlation_and_stats.csv',mode='a')
+B.to_csv('Correlation_and_stats_v2.csv',mode='a')
 
 import matplotlib.pyplot as plt
 plt.close('all')
@@ -79,7 +83,7 @@ plt.pcolormesh(s1)
 plt.colorbar()
 
 plt.figure(2)
-plt.pcolormesh(ftle_2hr)
+plt.pcolormesh(f)
 plt.colorbar()
 
 
