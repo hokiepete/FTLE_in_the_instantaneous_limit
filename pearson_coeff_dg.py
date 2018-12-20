@@ -54,7 +54,7 @@ del dfudy,dfudx,dfvdy,dfvdx
 
 x,y = np.meshgrid(x,y)
 
-u,v = vel_func(0,[x,y])
+u,v = vel_func(t0,[x,y])
 
 dudy,dudx = np.gradient(u,dy,dx)
 dvdy,dvdx = np.gradient(v,dy,dx)

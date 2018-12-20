@@ -9,8 +9,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 plt.close('all')
-A = pd.read_csv('Correlation_and_stats_dg2.csv')
-t_cor = np.linspace(0,10,101)
+A = pd.read_csv('Correlation_and_stats_dg.csv')
+t_cor = np.linspace(0,2,101)
 y_cor = A['s1']
 
 plt.figure(figsize=(8,6))
@@ -24,7 +24,7 @@ dy_cor = np.gradient(y_cor,dt_cor,edge_order=2)
 plt.figure(figsize=(8,6))
 plt.plot(t_cor,dy_cor)
 
-""
+"""
 xdim = 301
 #dimy = int(np.ceil(dimx/2.5))
 ydim = int(np.ceil(xdim/2))
@@ -34,7 +34,7 @@ dx = x[1]-x[0]
 y = np.linspace(0,1,ydim)
 dy = y[1]-y[0]
 x, y = np.meshgrid(x,y)
-time = np.linspace(0,10,tdim)
+time = np.linspace(0,-2,tdim)
 dt = time[1]-time[0]
 from velocities import double_gyre as vel_func
 
@@ -89,9 +89,9 @@ for t in range(tdim):
 np.savez('dg_eulerian_data.npz',s1=s1,s2=s2,corr1=corr1,corr2=corr2)
 #"""
 with np.load('dg_eulerian_data.npz') as F:
-    s1 = F['s1'][::-1]
-    corr1 = F['corr1'][::-1]
-time = np.linspace(0,10,s1.shape[0])
+    s1 = F['s1']
+    corr1 = F['corr1']
+time = np.linspace(0,2,s1.shape[0])
 s1_mean = s1.mean(axis=(1,2))
 corr1_mean = corr1.mean(axis=(1,2))
 
@@ -103,10 +103,10 @@ plt.axis('tight')
 plt.figure(figsize=(8,6))
 plt.plot(time,s1_mean)
 plt.ylabel('$hr^{-1}$')
-plt.xlabel('Hours')
+plt.xlabel('Time')
 plt.title('$s_{1}$ spatial mean')
 plt.axis('tight')
-plt.savefig('s1.png')
+plt.savefig('s1_dg.png')
 
 
 #dy = np.gradient(y,dt)
@@ -115,7 +115,7 @@ plt.plot(t_cor,dy_cor,label='d/dt correlation')
 plt.plot(time,corr1_mean,label='correction term, x48')
 plt.legend()
 plt.axis('tight')
-plt.savefig('CorCoef_vs_correction_notnormalized.png')
+plt.savefig('CorCoef_vs_correction_notnormalized_dg.png')
 
 
 dt = time[1]-time[0]
@@ -142,32 +142,32 @@ dy_cor = dy_cor - dy_cor.min()
 dy_cor = dy_cor/dy_cor.max()
 plt.plot(t_cor,dy_cor,label='d/dt correlation')
 plt.legend()
-plt.xlabel('hours')
+plt.xlabel('Time')
 plt.axis('tight')
-plt.savefig('correlation_vs_correction_normalized.png')
+plt.savefig('correlation_vs_correction_normalized_dg.png')
 
 data = [s1_mean,corr1_mean,ss,y_cor,dy_cor]
 name=['s1_mean','correction_mean','s1_mean-dt*correction_mean','correlation','d/dt correlation']
 Alldata = pd.DataFrame(np.transpose(data),columns=name)
-Alldata.corr().to_csv('s1+correction_correlation_data.csv',mode='w')
+Alldata.corr().to_csv('s1+correction_correlation_data_dg.csv',mode='w')
 
 plt.figure()
 plt.scatter(y_cor,ss)
 plt.xlabel('Correlation Coeff')
 plt.ylabel('s1_mean-dt*correction_mean, normalized')
-plt.savefig('CorCoef_vs_s1-Tcorrection.png')
+plt.savefig('CorCoef_vs_s1-Tcorrection_dg.png')
 
 plt.figure()
 plt.scatter(y_cor,s1_mean)
 plt.xlabel('Correlation Coeff')
 plt.ylabel('s1_mean, normalized')
-plt.savefig('CorCoef_vs_s1.png')
+plt.savefig('CorCoef_vs_s1_dg.png')
 
 plt.figure()
 plt.scatter(y_cor,corr1_mean)
 plt.xlabel('Correlation Coeff')
 plt.ylabel('correction spatial mean, normalized')
-plt.savefig('CorCoef_vs_correction.png')
+plt.savefig('CorCoef_vs_correction_dg.png')
 
 
 plt.figure()
@@ -175,7 +175,7 @@ plt.scatter(y_cor[:2],corr1_mean[:2])
 plt.xlabel('Correlation Coeff')
 plt.ylabel('correction spatial mean, normalized')
 plt.axis('equal')
-plt.savefig('CorCoef_vs_correctionv2.png')
+plt.savefig('CorCoef_vs_correctionv2_dg.png')
 
 
 
@@ -192,7 +192,7 @@ time = np.linspace(0,24,ftle.shape[0])
 plt.figure(figsize=(8,6))
 plt.plot(time,ftle_mean[::-1])
 plt.ylabel('$hr^{-1}$')
-plt.xlabel('Hours')
+plt.xlabel('Time')
 plt.title('FTLE spatial mean')
 plt.axis('tight')
 
