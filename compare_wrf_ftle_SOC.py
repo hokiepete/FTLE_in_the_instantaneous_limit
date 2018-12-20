@@ -76,7 +76,7 @@ v = 24*3.6*mf.unstagger(v,axis=1)
 
 [tdim,ydim,xdim]=u.shape
 
-dt=1/24#3600 #sec
+dt=1/24#1 day to hr 3600 #1 hrs 2 sec
 x = np.linspace(0,grid_spacing*(xdim-1),xdim)
 dx = x[1]-x[0]
 y = np.linspace(0,grid_spacing*(ydim-1),ydim)

@@ -5,7 +5,6 @@ import pandas as pd
 height_level = 17 #0.81 eta level
 height_level = 3 #roughly 80 m above ground level
 grid_spacing = 12*1000 #km 2 m
-
 tdim = 25
 xdim = 405
 ydim = 325

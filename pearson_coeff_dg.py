@@ -11,7 +11,7 @@ dimy = int(np.ceil(dimx/2))
 dimt = 101
 #dimy = 0.5*dimx
 t0 = 0
-tf = -10 #days
+tf = -2 #days
 
 x = np.linspace(0,2,dimx)
 y = np.linspace(0,1,dimy)
