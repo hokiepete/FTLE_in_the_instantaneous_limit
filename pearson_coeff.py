@@ -44,36 +44,37 @@ for i in range(ydim):
             #s1[i,j] = np.nan #np.ma.masked
             s1[i,j] =  999999
 s1 = np.ma.masked_where(s1==999999,s1)            
-s1 = s1 - s1.max(axis=None)
-s1 = s1/s1.min(axis=None)
-s1 = s1.filled(np.nan)
+#s1 = s1 - s1.max(axis=None)
+#s1 = s1/s1.min(axis=None)
+s1 = -s1.filled(np.nan)
 
 ncfile="ftle_80m.nc"
 root = Dataset(ncfile,'r') #read the data
 vars = root.variables #dictionary, all variables in dataset\
-ftle = vars['FTLE'][:,:,:,0]#.reshape([ydim,xdim,tdim],order='C')
+ftle = vars['FTLE'][::6,:,:,0]#.reshape([ydim,xdim,tdim],order='C')
 root.close()
 data = [s1.ravel()]
 name = ['s1']
 
 timelen = ftle.shape[0]
-for tt in range(timelen):
+for tt in range(9):#timelen):
     if tt == 0:
         continue
     
     #f = ftle[timelen-1-tt,:,:] - ftle[timelen-1-tt,:,:].min(axis=None)
-    f = ftle[-tt-1,:,:] - ftle[-tt-1,:,:].min(axis=None)
-    f = f/f.max(axis=None)
+    f = ftle[-tt-1,:,:]# - ftle[-tt-1,:,:].min(axis=None)
+    #f = f/f.max(axis=None)
     f =  np.ma.filled(f,np.nan)
     data.append(f.ravel())
-    name.append('{0:2.3f}hr'.format(tt/6))
+    #name.append('{0:2.3f}hr'.format(tt))#tt/6))
+    name.append('{0:d}hr'.format(tt))#tt/6))
 
 
 #Alldata = pd.DataFrame(np.transpose([s1.ravel(),ftle_2hr.ravel(),ftle_4hr.ravel(),ftle_6hr.ravel()]),columns=['s1','2hr','4hr','6hr'])
 Alldata = pd.DataFrame(np.transpose(data),columns=name)
-Alldata.corr().to_csv('Correlation_and_stats_v2.csv',mode='w')
-B=Alldata.describe()
-B.to_csv('Correlation_and_stats_v2.csv',mode='a')
+Alldata.corr().to_csv('Correlation_and_stats_v2.2_4paper.csv',mode='w',float_format='%1.3f')
+#B=Alldata.describe()
+#B.to_csv('Correlation_and_stats_v2.csv',mode='a')
 
 import matplotlib.pyplot as plt
 plt.close('all')

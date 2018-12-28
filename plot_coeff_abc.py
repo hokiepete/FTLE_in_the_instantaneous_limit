@@ -17,36 +17,21 @@ labelfont = {'fontsize':10}
 tickfont = {'fontsize':8}
 
 plt.close('all')
-A = pd.read_csv('Correlation_and_stats_dg2.csv')
-x = np.linspace(0,10,101)
+A = pd.read_csv('Correlation_and_stats_abc.csv')
+x = np.linspace(0,np.pi,96)
 y = A['s1']
 
-plt.figure(figsize=(8,6))
-plt.plot(x,y)
-plt.ylabel('Pearson correlation coefficient')
-plt.xlabel('Non-dimensional Time')
-plt.title('$s_{1}$ vs Backward-time FTLE correlation, Double Gyre')
-plt.axis('tight')
-dt = x[1]-x[0]
-dy = np.gradient(y)
-plt.figure(figsize=(8,6))
-plt.plot(x,dy)
-
-
-A = pd.read_csv('Correlation_and_stats_v2.2.csv')
-x = np.linspace(0,24,145)
-y = A['s1']
 
 plt.figure(figsize=(5,3))
 plt.plot(x,y)
 plt.ylabel('Pearson correlation coefficient',**labelfont)
-plt.xlabel('Backward-time integration length (hr)',**labelfont)
+plt.xlabel('Backward-time integration length',**labelfont)
 plt.title('$s_{1}$ vs backward-time FTLE correlation',**titlefont)
 plt.axis('tight')
-plt.xticks([0,6,12,18,24],**tickfont)
+plt.xticks(**tickfont)
 plt.yticks(**tickfont)
-plt.savefig('correlation_timeseries.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
-plt.savefig('correlation_timeseries.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
+plt.savefig('correlation_timeseries_abc.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
+plt.savefig('correlation_timeseries_abc.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
 """
 dt = x[1]-x[0]
 dy = np.gradient(y,dt)

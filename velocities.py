@@ -141,6 +141,16 @@ def rotHoop(t,Y, eps=0.1, gamma=2.3):
 def verhulst(t,Y, eps=0.01):
   return [1, 1/eps*(Y[0]*Y[1]-Y[1]**2)]
 
+def abc(t,Y, ABC_Amplitude=0.0):
+  Ap = np.sqrt(3)
+  Bp = np.sqrt(2)
+  u = (Ap+ABC_Amplitude*np.sin(np.pi*t))*np.sin(Y[2]) + np.cos(Y[1])
+  v = Bp*np.sin(Y[0]) + (Ap+ABC_Amplitude*np.sin(np.pi*t))*np.cos(Y[2])
+  w = np.sin(Y[1]) + Bp*np.cos(Y[0])
+  return [u,v,w]
+
+
+
 '''
 
 x = np.linspace(-1,1,11)
