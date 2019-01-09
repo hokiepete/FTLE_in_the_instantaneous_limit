@@ -21,12 +21,12 @@ A = pd.read_csv('Correlation_and_stats_abc.csv')
 x = np.linspace(0,np.pi,96)
 y = A['s1']
 
-
-plt.figure(figsize=(5,3))
+height = 2
+plt.figure(figsize=(5/3*height,height))
 plt.plot(x,y)
-plt.ylabel('Pearson correlation coefficient',**labelfont)
+plt.ylabel('Correlation coefficient',**labelfont)
 plt.xlabel('Backward-time integration length',**labelfont)
-plt.title('$s_{1}$ vs backward-time FTLE correlation',**titlefont)
+#plt.title('$s_{1}$ vs backward-time FTLE correlation',**titlefont)
 plt.axis('tight')
 plt.xticks(**tickfont)
 plt.yticks(**tickfont)
