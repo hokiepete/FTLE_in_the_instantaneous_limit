@@ -18,7 +18,7 @@ def co():
                   (1.0, 0.0000, 0.0000)]}
     return cdict
 
-def double_gyre(t,Y,A = 0.1,w = np.pi*0.2,e = 0.25):
+def double_gyre(t,Y,A = 0.1,w = 0.2*np.pi,e = 0.25):
     a = e*np.sin(w*t)
     b = 1-2*e*np.sin(w*t)
     f = a*Y[0]**2+b*Y[0]

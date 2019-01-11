@@ -48,7 +48,6 @@ dirdiv(zp<4)=NaN;
 dirdiv(abs(dirdiv)>0.2)=NaN;
 FV=isosurface(xp,yp,zp,dirdiv,0);
 %FV = smoothpatch(FV)
-
 %{
 figure
 hold on
@@ -134,6 +133,8 @@ trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'red','edgecolor','n
 xlabel('x')
 ylabel('y')
 zlabel('z')
+set(gca, 'XTick',[3,4])
+set(gca, 'YTick',[3,4])
 %title(sprintf('time = %1.3f',twant(i)))
 camlight
 lighting gouraud
@@ -154,6 +155,8 @@ trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'red','edgecolor','n
 xlabel('x')
 ylabel('y')
 zlabel('z')
+set(gca, 'XTick',[3,4])
+set(gca, 'YTick',[3,4])
 %title(sprintf('time = %1.3f',twant(i)))
 camlight
 lighting gouraud

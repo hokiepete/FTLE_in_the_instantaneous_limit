@@ -35,6 +35,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 import time
 import calendar
+plt.close('all')
 matplotlib.rcParams['text.usetex']=True
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 plt.rc('font', **{'family': 'serif', 'serif': ['cmr10']})
@@ -52,9 +53,6 @@ grid_spacing = 12*1000 #km 2 m
 #ydim = 325
 time_step = 21 #2100hrs
 
-figwidth = 6
-FigSize=(figwidth, ydim/xdim*figwidth)
-
 tstart = calendar.timegm(time.strptime('Jun 1, 2017 @ 00:00:00 UTC', '%b %d, %Y @ %H:%M:%S UTC'))
 ncfile="wrf_2011_07_01"#"ftle_80m.nc"
 root = Dataset(ncfile,'r')
@@ -65,6 +63,7 @@ lat = vars['XLAT'][0,:,:]
 lon = vars['XLONG'][0,:,:]
 root.close()
 [tdim,ydim,xdim]=u.shape
+
 
 
 #u=u[time_step,:,:]
@@ -84,14 +83,18 @@ y = np.linspace(0,grid_spacing*(ydim-1),ydim)
 dy = y[1]-y[0]
 x, y = np.meshgrid(x,y)
 
+dudt = np.gradient(u,dt,axis=0)
+dvdt = np.gradient(v,dt,axis=0)
+
 dudy,dudx = np.gradient(u,dy,dx,axis=(1,2))
 dvdy,dvdx = np.gradient(v,dy,dx,axis=(1,2))
 
+Du = dudt+u*dudx+v*dudy
+Dv = dvdy+u*dvdx+v*dvdy
 
-dudydt = np.gradient(dudy,dt,axis=0)
-dudxdt = np.gradient(dudx,dt,axis=0)
-dvdydt = np.gradient(dvdy,dt,axis=0)
-dvdxdt = np.gradient(dvdx,dt,axis=0)
+dDudy,dDudx = np.gradient(Du,dy,dx,axis=(1,2))
+dDvdy,dDvdx = np.gradient(Dv,dy,dx,axis=(1,2))
+
 
 s1 = np.ma.empty([tdim,ydim,xdim])
 b1 = np.ma.empty([tdim,ydim,xdim])
@@ -100,15 +103,15 @@ b2 = np.ma.empty([tdim,ydim,xdim])
 for t in range(tdim):
     for i in range(ydim):
         for j in range(xdim):
-            if (dudxdt[t,i,j] and dudydt[t,i,j] and dvdxdt[t,i,j] and dvdydt[t,i,j]) is not np.ma.masked:    
-                Grad = np.array([[dudx[t,i,j], dudy[t,i,j]], [dvdx[t,i,j], dvdy[t,i,j]]])
-                Grad_dt = np.array([[dudxdt[t,i,j], dudydt[t,i,j]], [dvdxdt[t,i,j], dvdydt[t,i,j]]])
-                S = 0.5*(Grad + np.transpose(Grad))
-                D = (0.5*(Grad_dt + np.transpose(Grad_dt)+np.matmul(np.transpose(Grad),Grad)))
+            if (dDudx[t,i,j] and dDudy[t,i,j] and dDvdx[t,i,j] and dDvdy[t,i,j]) is not np.ma.masked:    
+                Grad_v = np.array([[dudx[t,i,j], dudy[t,i,j]], [dvdx[t,i,j], dvdy[t,i,j]]])
+                Grad_D = np.array([[dDudx[t,i,j], dDudy[t,i,j]], [dDvdx[t,i,j], dDvdy[t,i,j]]])
+                S = 0.5*(Grad_v + np.transpose(Grad_v))
+                B = (0.5*(Grad_D + np.transpose(Grad_D)+np.matmul(np.transpose(Grad_v),Grad_v)))
                 s1[t,i,j] = np.min(np.linalg.eig(S)[0])
-                b1[t,i,j] = np.min(np.linalg.eig(D)[0])
+                b1[t,i,j] = np.min(np.linalg.eig(B)[0])
                 s2[t,i,j] = np.max(np.linalg.eig(S)[0])
-                b2[t,i,j] = np.max(np.linalg.eig(D)[0])
+                b2[t,i,j] = np.max(np.linalg.eig(B)[0])
             else:
                 s1[t,i,j] = np.ma.masked
                 b1[t,i,j] = np.ma.masked
@@ -134,7 +137,6 @@ m = Basemap(llcrnrlon=lon_min,
             resolution = 'h',
             area_thresh=1000.,
             )
-
 
 #lon,lat = np.meshgrid(lon,lat)
 plt.subplot(221)
@@ -310,3 +312,4 @@ for i in range(ydim):
             
 
 '''
+#"""
