@@ -11,20 +11,20 @@ dimy = int(np.ceil(dimx/2))
 dimt = 101
 #dimy = 0.5*dimx
 t0 = 0
-tf = -3 #days
+tf = 3 #days
 
 x = np.linspace(0,2,dimx)
 y = np.linspace(0,1,dimy)
 dx = x[1]-x[0]
 dy = y[1]-y[0]
 
-want_time = np.linspace(t0,tf,dimt)
+want_time = np.linspace(tf,t0,dimt)
 fu = np.empty([dimt,dimy,dimx])
 fv = np.empty([dimt,dimy,dimx])
 for i, yy in enumerate(y):
     for j, xx in enumerate(x):
         print('integrating x={0}, y={1}'.format(xx,yy))
-        sol = integrate.solve_ivp(vel_func,[t0,tf],(xx,yy),rtol=1e-8,atol=1e-8)
+        sol = integrate.solve_ivp(vel_func,[tf,t0],(xx,yy),rtol=1e-8,atol=1e-8)
         x_flow = sol.y[0,:]
         y_flow = sol.y[1,:]
         int_time = sol.t
@@ -39,6 +39,8 @@ del fu,fv
 #JF = np.empty([dimy,dimx])
 ftle = np.empty([dimt,dimy,dimx])
 for t in range(dimt):
+    if want_time(t)==tf:
+        continue
     for i in range(dimy):
         for j in range(dimx):
             print('FTLE calculation x={0}, y={1}, t={2}'.format(x[j],y[i],want_time[t]))
@@ -46,7 +48,7 @@ for t in range(dimt):
             C = np.dot(JF.T, JF)
             lam=np.max(np.linalg.eig(C)[0])
             if lam>=1:
-                ftle[t,i,j]=1.0/(2.0*abs(tf-t0))*np.log(lam)
+                ftle[t,i,j]=1.0/(2.0*abs(want_time(t)-tf))*np.log(lam)
             else:
                 ftle[t,i,j]=0
                 #sigma[i,j]=1/(2.0*abs(tf-t0))*np.log(lam)
@@ -86,9 +88,9 @@ for tt,time in enumerate(want_time):
         continue
     
     #f = ftle[timelen-1-tt,:,:] - ftle[timelen-1-tt,:,:].min(axis=None)
-    f = ftle[tt,:,:] - ftle[tt,:,:].min(axis=None)
-    f = f/f.max(axis=None)
-    f =  np.ma.filled(f,np.nan)
+    f = ftle[tt,:,:]# - ftle[tt,:,:].min(axis=None)
+    #f = f/f.max(axis=None)
+    #f =  np.ma.filled(f,np.nan)
     data.append(f.ravel())
     name.append('{0:2.3f}'.format(time))
     plt.figure()

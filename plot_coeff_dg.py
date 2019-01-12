@@ -11,11 +11,13 @@ import matplotlib.pyplot as plt
 plt.close('all')
 A = pd.read_csv('Correlation_and_stats_dg.csv')
 t_cor = np.linspace(0,3,101)
-y_cor = A['s1']
+y = A['s1']
+height=2
+plt.figure(figsize=(5/3*height,height))
+plt.plot(x,y)
+plt.ylabel('Correlation coefficient',**labelfont)
+plt.xlabel('Backward-time integration length',**labelfont)
 
-plt.figure(figsize=(8,6))
-plt.plot(t_cor,y_cor)
-plt.ylabel('Pearson correlation coefficient')
 plt.xlabel('Non-dimensional Time')
 plt.title('$s_{1}$ vs Backward-time FTLE correlation, Double Gyre')
 plt.axis('tight')
@@ -24,7 +26,7 @@ dy_cor = np.gradient(y_cor,dt_cor,edge_order=2)
 plt.figure(figsize=(8,6))
 plt.plot(t_cor,dy_cor)
 
-
+"""
 xdim = 301
 #dimy = int(np.ceil(dimx/2.5))
 ydim = int(np.ceil(xdim/2))
