@@ -8,7 +8,7 @@ from velocities import double_gyre as vel_func
 dimx = 201
 #dimy = int(np.ceil(dimx/2.5))
 dimy = int(np.ceil(dimx/2))
-dimt = 101
+dimt = 11
 #dimy = 0.5*dimx
 t0 = 0
 tf = -3 #days
@@ -37,9 +37,9 @@ dfudy,dfudx = np.gradient(fu,dy,dx,axis=(1,2),edge_order=2)
 dfvdy,dfvdx = np.gradient(fv,dy,dx,axis=(1,2),edge_order=2)
 del fu,fv
 #JF = np.empty([dimy,dimx])
-ftle = np.empty([dimt,dimy,dimx])
+ftle = np.zeros([dimt,dimy,dimx])
 for t in range(dimt):
-    if want_time[t]==t0:
+    if t==0:
         continue
     for i in range(dimy):
         for j in range(dimx):
