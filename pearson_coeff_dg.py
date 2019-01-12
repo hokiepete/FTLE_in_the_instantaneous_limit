@@ -5,7 +5,7 @@ from scipy import interpolate
 from scipy import integrate
 from velocities import double_gyre as vel_func
 
-dimx = 301
+dimx = 201
 #dimy = int(np.ceil(dimx/2.5))
 dimy = int(np.ceil(dimx/2))
 dimt = 101
@@ -24,7 +24,7 @@ fv = np.empty([dimt,dimy,dimx])
 for i, yy in enumerate(y):
     for j, xx in enumerate(x):
         print('integrating x={0}, y={1}'.format(xx,yy))
-        sol = integrate.solve_ivp(vel_func,[tf,t0],(xx,yy),rtol=1e-8,atol=1e-8)
+        sol = integrate.solve_ivp(vel_func,[t0,tf],(xx,yy),rtol=1e-8,atol=1e-8)
         x_flow = sol.y[0,:]
         y_flow = sol.y[1,:]
         int_time = sol.t
@@ -88,9 +88,9 @@ for tt,time in enumerate(want_time):
         continue
     
     #f = ftle[timelen-1-tt,:,:] - ftle[timelen-1-tt,:,:].min(axis=None)
-    f = ftle[tt,:,:]# - ftle[tt,:,:].min(axis=None)
-    #f = f/f.max(axis=None)
-    #f =  np.ma.filled(f,np.nan)
+    f = ftle[tt,:,:] - ftle[tt,:,:].min(axis=None)
+    f = f/f.max(axis=None)
+    f =  np.ma.filled(f,np.nan)
     data.append(f.ravel())
     name.append('{0:2.3f}'.format(time))
     plt.figure()
