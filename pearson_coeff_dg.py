@@ -80,7 +80,7 @@ s1 = np.ma.masked_where(s1==999999,s1)
 #s1 = s1 - s1.max(axis=None)
 #s1 = s1/s1.min(axis=None)
 s1 = s1.filled(np.nan)
-data = [s1.ravel()]
+data = [-s1.ravel()]
 name = ['s1']
 import matplotlib.pyplot as plt
 for tt,time in enumerate(want_time):
