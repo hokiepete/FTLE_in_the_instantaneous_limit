@@ -5,10 +5,10 @@ from scipy import interpolate
 from scipy import integrate
 from velocities import double_gyre as vel_func
 
-dimx = 201
+dimx = 301
 #dimy = int(np.ceil(dimx/2.5))
 dimy = int(np.ceil(dimx/2))
-dimt = 11
+dimt = 101
 #dimy = 0.5*dimx
 t0 = 0
 tf = -3 #days
@@ -77,8 +77,8 @@ for i in range(dimy):
             s1[i,j] =  999999
 
 s1 = np.ma.masked_where(s1==999999,s1)            
-s1 = s1 - s1.max(axis=None)
-s1 = s1/s1.min(axis=None)
+#s1 = s1 - s1.max(axis=None)
+#s1 = s1/s1.min(axis=None)
 s1 = s1.filled(np.nan)
 data = [s1.ravel()]
 name = ['s1']
@@ -88,14 +88,14 @@ for tt,time in enumerate(want_time):
         continue
     
     #f = ftle[timelen-1-tt,:,:] - ftle[timelen-1-tt,:,:].min(axis=None)
-    f = ftle[tt,:,:] - ftle[tt,:,:].min(axis=None)
-    f = f/f.max(axis=None)
+    f = ftle[tt,:,:]# - ftle[tt,:,:].min(axis=None)
+    #f = f/f.max(axis=None)
     f =  np.ma.filled(f,np.nan)
     data.append(f.ravel())
     name.append('{0:2.3f}'.format(time))
     plt.figure()
     plt.pcolormesh(x,y,f)
-    plt.savefig('ftle_{:}.png'.format(tt))
+    #plt.savefig('ftle_{:}.png'.format(tt))
     plt.close('all')
 
 #Alldata = pd.DataFrame(np.transpose([s1.ravel(),ftle_2hr.ravel(),ftle_4hr.ravel(),ftle_6hr.ravel()]),columns=['s1','2hr','4hr','6hr'])
