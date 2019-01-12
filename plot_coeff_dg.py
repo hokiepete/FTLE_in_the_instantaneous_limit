@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 plt.close('all')
 A = pd.read_csv('Correlation_and_stats_dg.csv')
-t_cor = np.linspace(0,2,101)
+t_cor = np.linspace(0,25,51)
 y_cor = A['s1']
 
 plt.figure(figsize=(8,6))
@@ -24,11 +24,11 @@ dy_cor = np.gradient(y_cor,dt_cor,edge_order=2)
 plt.figure(figsize=(8,6))
 plt.plot(t_cor,dy_cor)
 
-"""
-xdim = 301
+
+xdim = 51
 #dimy = int(np.ceil(dimx/2.5))
 ydim = int(np.ceil(xdim/2))
-tdim = 101
+tdim = 51
 x = np.linspace(0,2,xdim)
 dx = x[1]-x[0]
 y = np.linspace(0,1,ydim)
@@ -146,6 +146,7 @@ plt.xlabel('Time')
 plt.axis('tight')
 plt.savefig('correlation_vs_correction_normalized_dg.png')
 
+"""
 data = [s1_mean,corr1_mean,ss,y_cor,dy_cor]
 name=['s1_mean','correction_mean','s1_mean-dt*correction_mean','correlation','d/dt correlation']
 Alldata = pd.DataFrame(np.transpose(data),columns=name)
@@ -177,7 +178,7 @@ plt.ylabel('correction spatial mean, normalized')
 plt.axis('equal')
 plt.savefig('CorCoef_vs_correctionv2_dg.png')
 
-
+#"""
 
 
 '''

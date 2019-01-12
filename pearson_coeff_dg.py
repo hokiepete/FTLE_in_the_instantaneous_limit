@@ -5,13 +5,13 @@ from scipy import interpolate
 from scipy import integrate
 from velocities import double_gyre as vel_func
 
-dimx = 301
+dimx = 51
 #dimy = int(np.ceil(dimx/2.5))
 dimy = int(np.ceil(dimx/2))
-dimt = 101
+dimt = 51
 #dimy = 0.5*dimx
 t0 = 0
-tf = -2 #days
+tf = -3 #days
 
 x = np.linspace(0,2,dimx)
 y = np.linspace(0,1,dimy)
@@ -99,9 +99,10 @@ for tt,time in enumerate(want_time):
 #Alldata = pd.DataFrame(np.transpose([s1.ravel(),ftle_2hr.ravel(),ftle_4hr.ravel(),ftle_6hr.ravel()]),columns=['s1','2hr','4hr','6hr'])
 Alldata = pd.DataFrame(np.transpose(data),columns=name)
 Alldata.corr().to_csv('Correlation_and_stats_dg.csv',mode='w')
+'''
 B=Alldata.describe()
 B.to_csv('Correlation_and_stats_dg.csv',mode='a')
-
+'''
 plt.close('all')
 plt.figure(1)
 plt.pcolormesh(s1)

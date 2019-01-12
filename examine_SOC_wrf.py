@@ -40,7 +40,7 @@ y = np.linspace(0,grid_spacing*(ydim-1),ydim)
 dy = y[1]-y[0]
 x, y = np.meshgrid(x,y)
 
-"""
+
 dudt = np.gradient(u,dt,axis=0)
 dvdt = np.gradient(v,dt,axis=0)
 

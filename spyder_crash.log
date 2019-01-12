@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\BlackThunder\Anaconda3\lib\site-packages\spyder\app\mainwindow.py", line 3208, in main
+    mainwindow = run_spyder(app, options, args)
+  File "C:\Users\BlackThunder\Anaconda3\lib\site-packages\spyder\app\mainwindow.py", line 3082, in run_spyder
+    main = MainWindow(options)
+  File "C:\Users\BlackThunder\Anaconda3\lib\site-packages\spyder\app\mainwindow.py", line 320, in __init__
+    os.mkdir(programs.TEMPDIR)
+FileExistsError: [WinError 183] Cannot create a file when that file already exists: 'C:\\Users\\BLACKT~1\\AppData\\Local\\Temp\\spyder'

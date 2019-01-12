@@ -18,7 +18,7 @@ tickfont = {'fontsize':8}
 
 plt.close('all')
 A = pd.read_csv('Correlation_and_stats_abc.csv')
-x = np.linspace(0,np.pi,96)
+x = np.linspace(0,3,96)
 y = A['s1']
 
 height = 2
