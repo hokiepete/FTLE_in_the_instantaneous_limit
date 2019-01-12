@@ -11,14 +11,14 @@ dimy = int(np.ceil(dimx/2))
 dimt = 101
 #dimy = 0.5*dimx
 t0 = 0
-tf = 3 #days
+tf = -3 #days
 
 x = np.linspace(0,2,dimx)
 y = np.linspace(0,1,dimy)
 dx = x[1]-x[0]
 dy = y[1]-y[0]
 
-want_time = np.linspace(tf,t0,dimt)
+want_time = np.linspace(t0,tf,dimt)
 fu = np.empty([dimt,dimy,dimx])
 fv = np.empty([dimt,dimy,dimx])
 for i, yy in enumerate(y):
@@ -39,7 +39,7 @@ del fu,fv
 #JF = np.empty([dimy,dimx])
 ftle = np.empty([dimt,dimy,dimx])
 for t in range(dimt):
-    if want_time(t)==tf:
+    if want_time[t]==t0:
         continue
     for i in range(dimy):
         for j in range(dimx):
@@ -48,7 +48,7 @@ for t in range(dimt):
             C = np.dot(JF.T, JF)
             lam=np.max(np.linalg.eig(C)[0])
             if lam>=1:
-                ftle[t,i,j]=1.0/(2.0*abs(want_time(t)-tf))*np.log(lam)
+                ftle[t,i,j]=1.0/(2.0*abs(want_time[t]-t0))*np.log(lam)
             else:
                 ftle[t,i,j]=0
                 #sigma[i,j]=1/(2.0*abs(tf-t0))*np.log(lam)
