@@ -5,10 +5,10 @@ from scipy import interpolate
 from scipy import integrate
 from velocities import double_gyre as vel_func
 
-dimx = 51
+dimx = 301
 #dimy = int(np.ceil(dimx/2.5))
 dimy = int(np.ceil(dimx/2))
-dimt = 51
+dimt = 101
 #dimy = 0.5*dimx
 t0 = 0
 tf = -3 #days

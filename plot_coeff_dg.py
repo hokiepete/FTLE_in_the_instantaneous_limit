@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 plt.close('all')
 A = pd.read_csv('Correlation_and_stats_dg.csv')
-t_cor = np.linspace(0,25,51)
+t_cor = np.linspace(0,3,101)
 y_cor = A['s1']
 
 plt.figure(figsize=(8,6))
@@ -25,10 +25,10 @@ plt.figure(figsize=(8,6))
 plt.plot(t_cor,dy_cor)
 
 
-xdim = 51
+xdim = 301
 #dimy = int(np.ceil(dimx/2.5))
 ydim = int(np.ceil(xdim/2))
-tdim = 51
+tdim = 101
 x = np.linspace(0,2,xdim)
 dx = x[1]-x[0]
 y = np.linspace(0,1,ydim)
@@ -45,16 +45,18 @@ for time_step,t in enumerate(time):
     uu,vv = vel_func(t,[x,y])
     u[time_step,:,:]= uu
     v[time_step,:,:]= vv
-            
-
+    
+dudt = np.gradient(u,dt,axis=0)
+dvdt = np.gradient(v,dt,axis=0)
 
 dudy,dudx = np.gradient(u,dy,dx,axis=(1,2))
 dvdy,dvdx = np.gradient(v,dy,dx,axis=(1,2))
 
-dudydt = np.gradient(dudy,dt,axis=0)
-dudxdt = np.gradient(dudx,dt,axis=0)
-dvdydt = np.gradient(dvdy,dt,axis=0)
-dvdxdt = np.gradient(dvdx,dt,axis=0)
+Du = dudt+u*dudx+v*dudy
+Dv = dvdy+u*dvdx+v*dvdy
+
+dDudy,dDudx = np.gradient(Du,dy,dx,axis=(1,2))
+dDvdy,dDvdx = np.gradient(Dv,dy,dx,axis=(1,2))
 
 
 s1 = np.ma.empty([tdim,ydim,xdim])
@@ -65,11 +67,11 @@ for t in range(tdim):
     print(t)
     for i in range(ydim):
         for j in range(xdim):
-            if (dudxdt[t,i,j] and dudydt[t,i,j] and dvdxdt[t,i,j] and dvdydt[t,i,j]) is not np.ma.masked:    
-                Grad = np.array([[dudx[t,i,j], dudy[t,i,j]], [dvdx[t,i,j], dvdy[t,i,j]]])
-                Grad_dt = np.array([[dudxdt[t,i,j], dudydt[t,i,j]], [dvdxdt[t,i,j], dvdydt[t,i,j]]])
-                S = 0.5*(Grad + np.transpose(Grad))
-                B = (0.5*(Grad_dt + np.transpose(Grad_dt)+np.dot(np.transpose(Grad),Grad)))
+            if (dDudx[t,i,j] and dDudy[t,i,j] and dDvdx[t,i,j] and dDvdy[t,i,j]) is not np.ma.masked:    
+                Grad_v = np.array([[dudx[t,i,j], dudy[t,i,j]], [dvdx[t,i,j], dvdy[t,i,j]]])
+                Grad_D = np.array([[dDudx[t,i,j], dDudy[t,i,j]], [dDvdx[t,i,j], dDvdy[t,i,j]]])
+                S = 0.5*(Grad_v + np.transpose(Grad_v))
+                B = (0.5*(Grad_D + np.transpose(Grad_D)+np.matmul(np.transpose(Grad_v),Grad_v)))
                 eigenValues, eigenVectors_temp = np.linalg.eig(S)
                 idx = eigenValues.argsort()
                 eigenMin = eigenVectors_temp[:,idx[0]]
