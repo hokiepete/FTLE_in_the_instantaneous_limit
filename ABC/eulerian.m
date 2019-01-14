@@ -33,24 +33,35 @@ for i = 1:dimy
             end
             s1(i,j,k) = D(1,1);
             X1(i,j,k,:) = V(:,1);
+            sn(i,j,k) = D(end,end);
+            Xn(i,j,k,:) = V(:,end);
             %s1(i,j,k) = median(eig(S));
         end
     end
 end
 
-[dsdx,dsdy,dsdz] = gradient(s1,dx,dy,dz);
+[ds1dx,ds1dy,ds1dz] = gradient(s1,dx,dy,dz);
 
-[dsdxdx,dsdxdy,dsdxdz] = gradient(dsdx,dx,dy,dz);
-[dsdydx,dsdydy,dsdydz] = gradient(dsdy,dx,dy,dz);
-[dsdzdx,dsdzdy,dsdzdz] = gradient(dsdz,dx,dy,dz);
+[ds1dxdx,ds1dxdy,ds1dxdz] = gradient(ds1dx,dx,dy,dz);
+[ds1dydx,ds1dydy,ds1dydz] = gradient(ds1dy,dx,dy,dz);
+[ds1dzdx,ds1dzdy,ds1dzdz] = gradient(ds1dz,dx,dy,dz);
 
+
+[dsndx,dsndy,dsndz] = gradient(sn,dx,dy,dz);
+
+[dsndxdx,dsndxdy,dsndxdz] = gradient(dsndx,dx,dy,dz);
+[dsndydx,dsndydy,dsndydz] = gradient(dsndy,dx,dy,dz);
+[dsndzdx,dsndzdy,dsndzdz] = gradient(dsndz,dx,dy,dz);
 
 for i = 1:dimy
     i
     for j=1:dimx
         for k =1:dimz
-            dirdiv(i,j,k) = dot([dsdx(i,j,k),dsdy(i,j,k),dsdz(i,j,k)],squeeze(X1(i,j,k,:)));
-            concav(i,j,k) = dot([dsdxdx(i,j,k),dsdxdy(i,j,k),dsdxdz(i,j,k);dsdydx(i,j,k),dsdydy(i,j,k),dsdydz(i,j,k);dsdzdx(i,j,k),dsdzdy(i,j,k),dsdzdz(i,j,k)]*squeeze(X1(i,j,k,:)),squeeze(X1(i,j,k,:)));
+            dirdiv1(i,j,k) = dot([ds1dx(i,j,k),ds1dy(i,j,k),ds1dz(i,j,k)],squeeze(X1(i,j,k,:)));
+            concav1(i,j,k) = dot([ds1dxdx(i,j,k),ds1dxdy(i,j,k),ds1dxdz(i,j,k);ds1dydx(i,j,k),ds1dydy(i,j,k),ds1dydz(i,j,k);ds1dzdx(i,j,k),ds1dzdy(i,j,k),ds1dzdz(i,j,k)]*squeeze(X1(i,j,k,:)),squeeze(X1(i,j,k,:)));
+            
+            dirdivn(i,j,k) = dot([dsndx(i,j,k),dsndy(i,j,k),dsndz(i,j,k)],squeeze(Xn(i,j,k,:)));
+            concavn(i,j,k) = dot([dsndxdx(i,j,k),dsndxdy(i,j,k),dsndxdz(i,j,k);dsndydx(i,j,k),dsndydy(i,j,k),dsndydz(i,j,k);dsndzdx(i,j,k),dsndzdy(i,j,k),dsndzdz(i,j,k)]*squeeze(Xn(i,j,k,:)),squeeze(Xn(i,j,k,:)));
             
             %if abs(dirdiv(i,j,k)) > 0.1
             %    dirdiv(i,j,k) = nan;
@@ -59,7 +70,7 @@ for i = 1:dimy
     end
 end
 
-save OECS_DATA s1 X1 dirdiv concav x y z
+save OECS_DATA s1 X1 dirdiv1 concav1 sn Xn dirdivn concavn x y z
 %{
 figure
 model.cdata = s1

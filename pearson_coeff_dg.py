@@ -8,10 +8,10 @@ from velocities import double_gyre as vel_func
 dimx = 301
 #dimy = int(np.ceil(dimx/2.5))
 dimy = int(np.ceil(dimx/2))
-dimt = 101
+dimt = 9
 #dimy = 0.5*dimx
 t0 = 0
-tf = -3 #days
+tf = -2 #days
 
 x = np.linspace(0,2,dimx)
 y = np.linspace(0,1,dimy)
@@ -100,7 +100,7 @@ for tt,time in enumerate(want_time):
 
 #Alldata = pd.DataFrame(np.transpose([s1.ravel(),ftle_2hr.ravel(),ftle_4hr.ravel(),ftle_6hr.ravel()]),columns=['s1','2hr','4hr','6hr'])
 Alldata = pd.DataFrame(np.transpose(data),columns=name)
-Alldata.corr().to_csv('Correlation_and_stats_dg.csv',mode='w')
+Alldata.corr().to_csv('Correlation_and_stats_dg.csv',mode='w',float_format='%1.3f')
 '''
 B=Alldata.describe()
 B.to_csv('Correlation_and_stats_dg.csv',mode='a')

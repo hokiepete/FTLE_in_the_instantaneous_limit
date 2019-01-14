@@ -1,15 +1,13 @@
 clear all
 close all
 clc
-len = 11
+len = 96
 t0 = 0
-tf = 2*pi
 x = linspace(0,2*pi,len);
 dx=x(2)-x(1);
-twant = fliplr(linspace(t0,tf,len));
 [x,y,z] = meshgrid(x,x,x);
-%{
-[u,v,w] = abc_flow(x,y,z,tf);
+%
+[u,v,w] = abc_flow(x,y,z,t0);
 [dudx,dudy,dudz] = gradient(u,dx);
 [dvdx,dvdy,dvdz] = gradient(v,dx);
 [dwdx,dwdy,dwdz] = gradient(w,dx);
@@ -25,7 +23,7 @@ for i = 1:len
         end
     end
 end
-save('s1.mat','s1');
+save('s1_small.mat','s1');
 figure
 vol3d_v2('cdata',s1)
 xlabel('x')
@@ -36,7 +34,7 @@ colorbar
 %quiver3(x,y,z,u,v,w)
 %vol3d_v2('cdata',u)
 %}
-%
+%{
 
 x = linspace(0,2*pi,len);
 dx=x(2)-x(1);
@@ -107,31 +105,31 @@ clear all
 close all
 clc
 len = 96
+tlen = 9
 t0 = 0
-tf = 2*pi
+tf = -1
 x = linspace(0,2*pi,len);
 dx=x(2)-x(1);
-twant = fliplr(linspace(t0,tf,len));
+twant = linspace(t0,tf,tlen);
 [x,y,z] = meshgrid(x,x,x);
 for i = 1:len
     i
     for j = 1:len
         for k = 1:len
             y0=[x(i,j,k),y(i,j,k),z(i,j,k)];
-            [t,yout] = ode45(@abc_int,[tf,t0],y0);
+            [t,yout] = ode45(@abc_int,[t0,tf],y0);
             fx(:,i,j,k) = interp1(t,yout(:,1),twant);
             fy(:,i,j,k) = interp1(t,yout(:,2),twant);
             fz(:,i,j,k) = interp1(t,yout(:,3),twant);
         end
     end
 end
-sigma = zeros([len,len,len,len])
-for t = 1:len
+sigma = zeros([tlen,len,len,len]);
+for t = 1:tlen
     t
-    %backward-time integration starts at tf and ends at t0
-    %need to skip tf to avoid division by zero
+    %need to skip t0 to avoid division by zero
     %set FTLE to zero instead
-    if twant(t) == tf
+    if twant(t) == t0
         continue
     else
         [dfxdx,dfxdy,dfxdz] = gradient(squeeze(fx(t,:,:,:)),dx);
@@ -145,7 +143,7 @@ for t = 1:len
                              dfzdx(i,j,k),dfzdy(i,j,k),dfzdz(i,j,k)];
                     C = gradF'*gradF;
                     lambda = max(eig(C));
-                    sigma(t,i,j,k) = 1/(2*abs(twant(t)-tf))*log(lambda);
+                    sigma(t,i,j,k) = 1/(2*abs(twant(t)-t0))*log(lambda);
 
 
                 end
@@ -154,4 +152,4 @@ for t = 1:len
     end
 end
 
-save('output.mat', 'sigma');
+save('sigma_small.mat', 'sigma');

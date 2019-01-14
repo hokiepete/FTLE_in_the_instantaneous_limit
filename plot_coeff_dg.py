@@ -8,23 +8,28 @@ Created on Sat Dec 15 21:38:52 2018
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.rcParams['text.usetex']=True
+matplotlib.rcParams['mathtext.fontset'] = 'cm'
+plt.rc('font', **{'family': 'serif', 'serif': ['cmr10']})
+titlefont = {'fontsize':12}
+labelfont = {'fontsize':10}
+tickfont = {'fontsize':8}
+
 plt.close('all')
 A = pd.read_csv('Correlation_and_stats_dg.csv')
 t_cor = np.linspace(0,3,101)
 y = A['s1']
 height=2
 plt.figure(figsize=(5/3*height,height))
-plt.plot(x,y)
+plt.plot(t_cor,y)
 plt.ylabel('Correlation coefficient',**labelfont)
 plt.xlabel('Backward-time integration length',**labelfont)
-
-plt.xlabel('Non-dimensional Time')
-plt.title('$s_{1}$ vs Backward-time FTLE correlation, Double Gyre')
 plt.axis('tight')
-dt_cor = t_cor[1]-t_cor[0]
-dy_cor = np.gradient(y_cor,dt_cor,edge_order=2)
-plt.figure(figsize=(8,6))
-plt.plot(t_cor,dy_cor)
+plt.xticks(**tickfont)
+plt.yticks(**tickfont)
+plt.savefig('correlation_timeseries_dg.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
+plt.savefig('correlation_timeseries_dg.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
 
 """
 xdim = 301
