@@ -9,18 +9,18 @@ zp=z;
 d3ballsize=15
 radius = 0.25
 xorg= 3.8
-zorg= 5.5
+zorg= 6%5.5+radius
 yorg= 3.1
-zorg2= zorg-2*radius
+zorg2= 4.5%zorg-4*radius
 xorg2=xorg
 yorg2= yorg
 [x,y,z]=sphere(d3ballsize);
 x=radius*x;
 y=radius*y;
 z=radius*z;
-x = reshape(x,[],1) + xorg;
-y = reshape(y,[],1) + yorg;
-z = reshape(z,[],1) + zorg;
+%x = reshape(x,[],1) + xorg;
+%y = reshape(y,[],1) + yorg;
+%z = reshape(z,[],1) + zorg;
 
 x1 = reshape(x,[],1) + xorg;
 y1 = reshape(y,[],1) + yorg2;
@@ -34,7 +34,7 @@ z2 = reshape(z,[],1) + zorg2;
 n=25;
 tend=2*pi
 twant = linspace(0,tend,n);
-for i = 1:length(x)
+for i = 1:length(x1)
     y01=[x1(i),y1(i),z1(i)];
     y02=[x2(i),y2(i),z2(i)];
     [t1,yout1] = ode45(@abc_int,[0,tend],y01);
@@ -49,20 +49,20 @@ end
 
 %
 for i=1:3
-    dirdiv = smooth3(dirdiv);
-    concav = smooth3(concav);
+    dirdiv1 = smooth3(dirdiv1);
+    concav1 = smooth3(concav1);
     s1 = smooth3(s1);
 end
 %}
-dirdiv(s1>0)=NaN;
-dirdiv(concav<=0)=NaN;
-dirdiv(xp<2.5)=NaN;
-dirdiv(xp>5)=NaN;
-dirdiv(yp<2)=NaN;
-dirdiv(yp>4.5)=NaN;
-dirdiv(zp<4)=NaN;
-dirdiv(abs(dirdiv)>0.2)=NaN;
-FV=isosurface(xp,yp,zp,dirdiv,0);
+dirdiv1(s1>0)=NaN;
+dirdiv1(concav1<=0)=NaN;
+dirdiv1(xp<2.5)=NaN;
+dirdiv1(xp>5)=NaN;
+dirdiv1(yp<2)=NaN;
+dirdiv1(yp>4.5)=NaN;
+dirdiv1(zp<4)=NaN;
+dirdiv1(abs(dirdiv1)>0.2)=NaN;
+FV=isosurface(xp,yp,zp,dirdiv1,0);
 %FV = smoothpatch(FV)
 %{
 figure

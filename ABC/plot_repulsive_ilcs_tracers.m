@@ -11,12 +11,12 @@ load OECS_DATA
 xp=x;
 yp=y;
 zp=z;
-d3ballsize=151
+d3ballsize=15
 radius = 0.25
-xorg= 2.5
-zorg= 4.8
-yorg= 1.1
-zorg2= 3.3
+xorg= 5.8
+zorg= 3.8
+yorg= 5.5
+zorg2= zorg%-2*radius%3.3
 [x,y,z]=sphere(d3ballsize);
 x=radius*x;
 y=radius*y;
@@ -59,12 +59,23 @@ end
 %}
 dirdivn(sn<0)=NaN;
 dirdivn(concavn>=0)=NaN;
-dirdivn(yp>2.5)=NaN;
-dirdivn(xp>3.5)=NaN;
-dirdivn(xp<1)=NaN;
+dirdivn(abs(dirdivn)>0.2)=NaN;
+%{
+fig=figure('units','inch','position',[0,0,6,6])
+FV=isosurface(xp,yp,zp,dirdivn,0);
+patch(FV,'facecolor','red','edgecolor','none','FaceAlpha',1.0);
+%scatter3(xx(i,:),yy(i,:),zz(i,:),'b.');
+camlight
+lighting gouraud
+xlabel('x')
+ylabel('y')
+zlabel('z')
+%}
+dirdivn(yp<2.5)=NaN;
+%dirdivn(xp>3.5)=NaN;
+dirdivn(xp<3)=NaN;
 dirdivn(zp>5)=NaN;
 dirdivn(zp<3)=NaN;
-dirdivn(abs(dirdivn)>0.2)=NaN;
 FV=isosurface(xp,yp,zp,dirdivn,0);
 %FV = smoothpatch(FV)
 %
@@ -149,7 +160,7 @@ trisurf(triboundary2,xx2(i,:)',yy2(i,:)',zz2(i,:)','FaceColor', 'green','edgecol
 xlabel('x')
 ylabel('y')
 zlabel('z')
-set(gca, 'XTick',[2,3])
+%set(gca, 'XTick',[2,3])
 %set(gca, 'YTick',[3,4])
 %title(sprintf('time = %1.3f',twant(i)))
 camlight
@@ -175,7 +186,7 @@ trisurf(triboundary2,xx2(i,:)',yy2(i,:)',zz2(i,:)','FaceColor', 'green','edgecol
 xlabel('x')
 ylabel('y')
 zlabel('z')
-set(gca, 'XTick',[2,3])
+%set(gca, 'XTick',[2,3])
 %set(gca, 'YTick',[3,4])
 %title(sprintf('time = %1.3f',twant(i)))
 camlight
@@ -236,7 +247,7 @@ axis equal tight
 view(az2,el2)
 %view(20,20)
 %}
-saveas(fig,'repelling_ilcs_v3.eps','epsc')
+saveas(fig,'repelling_ilcs_v4.eps','epsc')
 %{
 i = n
 subplot(3,2,5)
