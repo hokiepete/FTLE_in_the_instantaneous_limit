@@ -1,4 +1,4 @@
-function dydt = dg_int(t,y)
+function dydt = dg_int(t,Y)
     A = 0.1;
     w = 0.2.*pi;
     e = 0.25;

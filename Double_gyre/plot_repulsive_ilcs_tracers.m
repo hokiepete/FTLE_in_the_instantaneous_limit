@@ -11,11 +11,11 @@ load OECS_DATA
 xp=x;
 yp=y;
 zp=z;
-d3ballsize=15
-radius = 0.25
-xorg= 5.8
-zorg= 3.8
-yorg= 5.5
+d3ballsize=151
+radius = 0.1
+xorg= 1
+zorg= 0.5
+yorg= 0.2
 zorg2= zorg%-2*radius%3.3
 [x,y,z]=sphere(d3ballsize);
 x=radius*x;
@@ -25,29 +25,24 @@ x1 = reshape(x,[],1) + xorg;
 y1 = reshape(y,[],1) + yorg;
 z1 = reshape(z,[],1) + zorg;
 
-x2 = reshape(x,[],1) + xorg;
-y2 = reshape(y,[],1) + yorg;
-z2 = reshape(z,[],1) + zorg2;
-
-%x = vertcat(x1,x2);
-%y = vertcat(y1,y2);
-%z = vertcat(z1,z2);
-
-
+lims = [0,0,0;
+        0,0,1;
+        0,1,0;
+        0,1,1;
+        2,0,0;
+        2,0,1;
+        2,1,0
+];
+%2,1,1
 n=25;
-tend=2*pi
+tend=10
 twant = linspace(0,tend,n);
 for i = 1:length(x1)
     y01=[x1(i),y1(i),z1(i)];
-    y02=[x2(i),y2(i),z2(i)];
-    [t1,yout1] = ode45(@abc_int,[0,tend],y01);
-    [t2,yout2] = ode45(@abc_int,[0,tend],y02);
+    [t1,yout1] = ode45(@dg_int,[0,tend],y01);
     xx1(:,i) = interp1(t1,yout1(:,1),twant);
     yy1(:,i) = interp1(t1,yout1(:,2),twant);
     zz1(:,i) = interp1(t1,yout1(:,3),twant);
-    xx2(:,i) = interp1(t2,yout2(:,1),twant);
-    yy2(:,i) = interp1(t2,yout2(:,2),twant);
-    zz2(:,i) = interp1(t2,yout2(:,3),twant);
 end
 
 %
@@ -59,18 +54,19 @@ end
 %}
 dirdivn(sn<0)=NaN;
 dirdivn(concavn>=0)=NaN;
-dirdivn(abs(dirdivn)>0.2)=NaN;
-%{
+%dirdivn(abs(dirdivn)>0.2)=NaN;
+%
 fig=figure('units','inch','position',[0,0,6,6])
+hold on
 FV=isosurface(xp,yp,zp,dirdivn,0);
 patch(FV,'facecolor','red','edgecolor','none','FaceAlpha',1.0);
-%scatter3(xx(i,:),yy(i,:),zz(i,:),'b.');
+scatter3(lims(:,1),lims(:,2),lims(:,3),1,'w.');
 camlight
 lighting gouraud
 xlabel('x')
 ylabel('y')
 zlabel('z')
-%}
+%{
 dirdivn(yp<2.5)=NaN;
 %dirdivn(xp>3.5)=NaN;
 dirdivn(xp<3)=NaN;
@@ -78,7 +74,8 @@ dirdivn(zp>5)=NaN;
 dirdivn(zp<3)=NaN;
 FV=isosurface(xp,yp,zp,dirdivn,0);
 %FV = smoothpatch(FV)
-%
+%}
+%{
 splitpatch = splitFV(FV);
 index = 1;
 len = length(splitpatch(1).faces)
@@ -92,57 +89,48 @@ FV=splitpatch(index)
 %}
 points = FV.vertices;
 n=25;
-tend=2*pi
 twant = linspace(0,tend,n);
 for i = 1:length(points)
     y0=[points(i,1),points(i,2),points(i,3)];
-    [t,yout] = ode45(@abc_int,[0,tend],y0);
+    [t,yout] = ode45(@dg_int,[0,tend],y0);
     xvert(:,i) = interp1(t,yout(:,1),twant);
     yvert(:,i) = interp1(t,yout(:,2),twant);
     zvert(:,i) = interp1(t,yout(:,3),twant);
 end
 verts = cat(3,xvert,yvert,zvert);
-%{
+%
 fig=figure
 for i =1:n
     clf
     hold on
     FV.vertices=squeeze(verts(i,:,:));
-    patch(FV,'facecolor','red','edgecolor','none');
-    %scatter3(xx(i,:),yy(i,:),zz(i,:),'b.');
+    patch(FV,'facecolor','red','edgecolor','none','FaceAlpha',0.4);
+    scatter3(lims(:,1),lims(:,2),lims(:,3),1,'w.');
     dt1 = delaunayTriangulation(xx1(i,:)',yy1(i,:)',zz1(i,:)');
     triboundary1 = convexHull(dt1);
-    trisurf(triboundary1,xx1(i,:)',yy1(i,:)',zz1(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',1.0)
-    dt2 = delaunayTriangulation(xx2(i,:)',yy2(i,:)',zz2(i,:)');
-    triboundary2 = convexHull(dt2);
-    trisurf(triboundary2,xx2(i,:)',yy2(i,:)',zz2(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',1.0)
-
+    trisurf(triboundary1,xx1(i,:)',yy1(i,:)',zz1(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',1.0);
     xlabel('x')
     ylabel('y')
     zlabel('z')
     title(sprintf('time = %d',i))
     camlight
     lighting gouraud
-    %axis([-15,5,-10,15,-5,15])
     axis equal tight
-    %view(3)
-    view(-124,32)
-    %view(20,20)
-    pause(0.25)
+    view(3)
     g=getframe(fig);
     writeVideo(v,g)
 end
-
+%}
 
 
 %}
 close(v)
-az2 = 28%47
-el2 = 29%35
-az =-190%-25
-el =10% 21
+az2 = 120%28%47
+el2 = 15%29%35
+az = -60%-190%-25
+el =15% 21
 alpT = 1.0
-alpS = 0.4
+alpS = 0.6
 font = 'cmr'
 fig=figure('units','inch','position',[0,0,6,6],'DefaultTextFontName', font, 'DefaultAxesFontName', font);
 i = 1
@@ -150,103 +138,74 @@ subplot(2,2,1)
 hold on
 FV.vertices=squeeze(verts(i,:,:));
 patch(FV,'facecolor','red','edgecolor','none','FaceAlpha',alpS);
-%scatter3(xx(i,:),yy(i,:),zz(i,:),'b.');
+scatter3(lims(:,1),lims(:,2),lims(:,3),1,'w.');
 dt1 = delaunayTriangulation(xx1(i,:)',yy1(i,:)',zz1(i,:)');
 triboundary1 = convexHull(dt1);
 trisurf(triboundary1,xx1(i,:)',yy1(i,:)',zz1(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',1.0)
-dt2 = delaunayTriangulation(xx2(i,:)',yy2(i,:)',zz2(i,:)');
-triboundary2 = convexHull(dt2);
-trisurf(triboundary2,xx2(i,:)',yy2(i,:)',zz2(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',1.0)
 xlabel('x')
 ylabel('y')
 zlabel('z')
 %set(gca, 'XTick',[2,3])
 %set(gca, 'YTick',[3,4])
-%title(sprintf('time = %1.3f',twant(i)))
 camlight
 lighting gouraud
-%axis([-15,5,-10,15,-5,15])
-axis equal tight
-%view(3)
-%view(-124,32)
+%axis([0,2,0,1,0,1])
+axis equal tight;
 view(az,el)
-%view(20,20)
 
 subplot(2,2,2)
 hold on
 FV.vertices=squeeze(verts(i,:,:));
 patch(FV,'facecolor','red','edgecolor','none','FaceAlpha',alpS);
-%scatter3(xx(i,:),yy(i,:),zz(i,:),'b.');
+scatter3(lims(:,1),lims(:,2),lims(:,3),1,'w.');
 dt1 = delaunayTriangulation(xx1(i,:)',yy1(i,:)',zz1(i,:)');
 triboundary1 = convexHull(dt1);
 trisurf(triboundary1,xx1(i,:)',yy1(i,:)',zz1(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',1.0)
-dt2 = delaunayTriangulation(xx2(i,:)',yy2(i,:)',zz2(i,:)');
-triboundary2 = convexHull(dt2);
-trisurf(triboundary2,xx2(i,:)',yy2(i,:)',zz2(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',1.0)
 xlabel('x')
 ylabel('y')
 zlabel('z')
 %set(gca, 'XTick',[2,3])
 %set(gca, 'YTick',[3,4])
-%title(sprintf('time = %1.3f',twant(i)))
 camlight
 lighting gouraud
-%axis([-15,5,-10,15,-5,15])
-axis equal tight
-%view(3)
-%view(-124,32)
+axis equal tight;
 view(az2,el2)
-%view(20,20)
-%}
-i = 6
+
+i = 4
 subplot(2,2,3)
 hold on
 FV.vertices=squeeze(verts(i,:,:));
 patch(FV,'facecolor','red','edgecolor','none','FaceAlpha',alpS);
-%scatter3(xx(i,:),yy(i,:),zz(i,:),'b.');
+scatter3(lims(:,1),lims(:,2),lims(:,3),1,'w.');
 dt1 = delaunayTriangulation(xx1(i,:)',yy1(i,:)',zz1(i,:)');
 triboundary1 = convexHull(dt1);
 trisurf(triboundary1,xx1(i,:)',yy1(i,:)',zz1(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',1.0)
-dt2 = delaunayTriangulation(xx2(i,:)',yy2(i,:)',zz2(i,:)');
-triboundary2 = convexHull(dt2);
-trisurf(triboundary2,xx2(i,:)',yy2(i,:)',zz2(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',1.0)
 xlabel('x')
 ylabel('y')
 zlabel('z')
-%title(sprintf('time = %1.3f',twant(i)))%,'FontName','Stencil')
 camlight
 lighting gouraud
-%axis([-15,5,-10,15,-5,15])
-axis equal tight
-%view(3)
-%view(-124,32)
+%axis([0,2,0,1,0,1])
+axis equal tight;
 view(az,el)
-%view(20,20)
 
 subplot(2,2,4)
 hold on
 FV.vertices=squeeze(verts(i,:,:));
 patch(FV,'facecolor','red','edgecolor','none','FaceAlpha',alpS);
-%scatter3(xx(i,:),yy(i,:),zz(i,:),'b.');
+scatter3(lims(:,1),lims(:,2),lims(:,3),1,'w.');
 dt1 = delaunayTriangulation(xx1(i,:)',yy1(i,:)',zz1(i,:)');
 triboundary1 = convexHull(dt1);
 trisurf(triboundary1,xx1(i,:)',yy1(i,:)',zz1(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',1.0)
-dt2 = delaunayTriangulation(xx2(i,:)',yy2(i,:)',zz2(i,:)');
-triboundary2 = convexHull(dt2);
-trisurf(triboundary2,xx2(i,:)',yy2(i,:)',zz2(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',1.0)
 xlabel('x')
 ylabel('y')
 zlabel('z')
-%title(sprintf('time = %1.3f',twant(i)))
 camlight
 lighting gouraud
-%axis([-15,5,-10,15,-5,15])
-axis equal tight
-%view(3)
-%view(-124,32)
+%axis([0,2,0,1,0,1])
+axis equal tight;
 view(az2,el2)
-%view(20,20)
-%}
+
 saveas(fig,'repelling_ilcs_v4.eps','epsc')
 %{
 i = n
