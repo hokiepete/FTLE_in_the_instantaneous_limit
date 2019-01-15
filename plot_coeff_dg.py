@@ -13,22 +13,28 @@ matplotlib.rcParams['text.usetex']=True
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 plt.rc('font', **{'family': 'serif', 'serif': ['cmr10']})
 titlefont = {'fontsize':12}
-labelfont = {'fontsize':10}
+#labelfont = {'fontsize':10}
+labelfont = {'fontsize':14}
 tickfont = {'fontsize':8}
 
 plt.close('all')
-A = pd.read_csv('Correlation_and_stats_dg.csv')
+A = pd.read_csv('Correlation_and_stats_dg_long.csv')
+B = pd.read_csv('Correction_correlation_dg.csv',usecols=[0],header=None,names=['-s1-T*corr'])
 t_cor = np.linspace(0,3,101)
+#t_cor = np.linspace(0,0.02,101)
 y = A['s1']
-height=2
+z = B['-s1-T*corr']
+height=10
 plt.figure(figsize=(5/3*height,height))
-plt.plot(t_cor,y)
+plt.plot(t_cor,y,label='$-s_{1}$')
+plt.plot(t_cor,z,label='$-s_{1}$-T*correction')
 plt.ylabel('Correlation coefficient',**labelfont)
 plt.xlabel('Backward-time integration length',**labelfont)
 plt.axis('tight')
+plt.legend(**labelfont)
 plt.xticks(**tickfont)
 plt.yticks(**tickfont)
-plt.savefig('correlation_timeseries_dg.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
+plt.savefig('correlation_timeseries_dg_v2.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
 plt.savefig('correlation_timeseries_dg.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
 
 """
@@ -41,7 +47,7 @@ dx = x[1]-x[0]
 y = np.linspace(0,1,ydim)
 dy = y[1]-y[0]
 x, y = np.meshgrid(x,y)
-time = np.linspace(0,-2,tdim)
+time = np.linspace(0,-3,tdim)
 dt = time[1]-time[0]
 from velocities import double_gyre as vel_func
 
@@ -95,8 +101,10 @@ for t in range(tdim):
                 corr1[t,i,j] = np.ma.masked
                 corr2[t,i,j] = np.ma.masked
                 
-np.savez('dg_eulerian_data.npz',s1=s1,s2=s2,corr1=corr1,corr2=corr2)
+np.savez('dg_eulerian_data.npz',s1=s1,s2=s2,corr1=corr1,corr2=corr2,time=time)
 #"""
+
+"""
 with np.load('dg_eulerian_data.npz') as F:
     s1 = F['s1']
     corr1 = F['corr1']
@@ -155,7 +163,7 @@ plt.xlabel('Time')
 plt.axis('tight')
 plt.savefig('correlation_vs_correction_normalized_dg.png')
 
-"""
+
 data = [s1_mean,corr1_mean,ss,y_cor,dy_cor]
 name=['s1_mean','correction_mean','s1_mean-dt*correction_mean','correlation','d/dt correlation']
 Alldata = pd.DataFrame(np.transpose(data),columns=name)

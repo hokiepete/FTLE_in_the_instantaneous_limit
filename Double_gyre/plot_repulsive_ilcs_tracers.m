@@ -56,16 +56,6 @@ dirdivn(sn<0)=NaN;
 dirdivn(concavn>=0)=NaN;
 %dirdivn(abs(dirdivn)>0.2)=NaN;
 %
-fig=figure('units','inch','position',[0,0,6,6])
-hold on
-FV=isosurface(xp,yp,zp,dirdivn,0);
-patch(FV,'facecolor','red','edgecolor','none','FaceAlpha',1.0);
-scatter3(lims(:,1),lims(:,2),lims(:,3),1,'w.');
-camlight
-lighting gouraud
-xlabel('x')
-ylabel('y')
-zlabel('z')
 %{
 dirdivn(yp<2.5)=NaN;
 %dirdivn(xp>3.5)=NaN;
@@ -87,6 +77,7 @@ for i=2:length(splitpatch)
 end
 FV=splitpatch(index)
 %}
+FV=isosurface(xp,yp,zp,dirdivn,0);
 points = FV.vertices;
 n=25;
 twant = linspace(0,tend,n);
@@ -106,13 +97,14 @@ for i =1:n
     FV.vertices=squeeze(verts(i,:,:));
     patch(FV,'facecolor','red','edgecolor','none','FaceAlpha',0.4);
     scatter3(lims(:,1),lims(:,2),lims(:,3),1,'w.');
-    dt1 = delaunayTriangulation(xx1(i,:)',yy1(i,:)',zz1(i,:)');
-    triboundary1 = convexHull(dt1);
-    trisurf(triboundary1,xx1(i,:)',yy1(i,:)',zz1(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',1.0);
+    scatter3(xx1(i,:),yy1(i,:),zz1(i,:),'g.');
+    %dt1 = delaunayTriangulation(xx1(i,:)',yy1(i,:)',zz1(i,:)');
+    %triboundary1 = convexHull(dt1);
+    %trisurf(triboundary1,xx1(i,:)',yy1(i,:)',zz1(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',1.0);
     xlabel('x')
     ylabel('y')
     zlabel('z')
-    title(sprintf('time = %d',i))
+    title(sprintf('time = %d',twant(i)))
     camlight
     lighting gouraud
     axis equal tight

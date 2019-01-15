@@ -8,10 +8,10 @@ from velocities import double_gyre as vel_func
 dimx = 301
 #dimy = int(np.ceil(dimx/2.5))
 dimy = int(np.ceil(dimx/2))
-dimt = 9
+dimt = 101
 #dimy = 0.5*dimx
 t0 = 0
-tf = -2 #days
+tf = -0.02 #days
 
 x = np.linspace(0,2,dimx)
 y = np.linspace(0,1,dimy)
@@ -39,11 +39,12 @@ del fu,fv
 #JF = np.empty([dimy,dimx])
 ftle = np.zeros([dimt,dimy,dimx])
 for t in range(dimt):
+    print('FTLE calculation t={0}'.format(want_time[t]))
     if t==0:
         continue
     for i in range(dimy):
         for j in range(dimx):
-            print('FTLE calculation x={0}, y={1}, t={2}'.format(x[j],y[i],want_time[t]))
+            #print('FTLE calculation x={0}, y={1}, t={2}'.format(x[j],y[i],want_time[t]))
             JF = np.array([[dfudx[t,i,j],dfudy[t,i,j]],[dfvdx[t,i,j],dfvdy[t,i,j]]])
             C = np.dot(JF.T, JF)
             lam=np.max(np.linalg.eig(C)[0])
@@ -52,6 +53,7 @@ for t in range(dimt):
             else:
                 ftle[t,i,j]=0
                 #sigma[i,j]=1/(2.0*abs(tf-t0))*np.log(lam)
+np.savez('dg_ftle_data.npz',ftle=ftle,time=want_time)
 del dfudy,dfudx,dfvdy,dfvdx
 
 x,y = np.meshgrid(x,y)
@@ -92,7 +94,7 @@ for tt,time in enumerate(want_time):
     #f = f/f.max(axis=None)
     f =  np.ma.filled(f,np.nan)
     data.append(f.ravel())
-    name.append('{0:2.3f}'.format(time))
+    name.append('{0:2.9f}'.format(time))
     plt.figure()
     plt.pcolormesh(x,y,f)
     #plt.savefig('ftle_{:}.png'.format(tt))
@@ -100,7 +102,7 @@ for tt,time in enumerate(want_time):
 
 #Alldata = pd.DataFrame(np.transpose([s1.ravel(),ftle_2hr.ravel(),ftle_4hr.ravel(),ftle_6hr.ravel()]),columns=['s1','2hr','4hr','6hr'])
 Alldata = pd.DataFrame(np.transpose(data),columns=name)
-Alldata.corr().to_csv('Correlation_and_stats_dg.csv',mode='w',float_format='%1.3f')
+Alldata.corr().to_csv('Correlation_and_stats_dg.csv',mode='w')#,float_format='%1.3f')
 '''
 B=Alldata.describe()
 B.to_csv('Correlation_and_stats_dg.csv',mode='a')

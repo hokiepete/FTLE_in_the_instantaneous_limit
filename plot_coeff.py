@@ -124,7 +124,7 @@ for t in range(tdim):
                 
 np.savez('hossien_wrf_eulerian_data.npz',s1=s1,s2=s2,corr1=corr1,corr2=corr2)
 #"""
-"""
+
 with np.load('hossien_wrf_eulerian_data.npz') as F:
     s1 = 3600*F['s1'][::-1]
     corr1 = 3600**2*F['corr1'][::-1]
