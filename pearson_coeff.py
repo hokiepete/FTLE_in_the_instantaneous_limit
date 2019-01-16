@@ -4,8 +4,8 @@ import pandas as pd
 
 height_level = 17 #0.81 eta level
 height_level = 3 #roughly 80 m above ground level
-grid_spacing = 12*1000 #km 2 m
-tdim = 25
+grid_spacing = 12#km *1000 #km 2 m
+tdim = 145
 xdim = 405
 ydim = 325
 
@@ -13,8 +13,8 @@ ydim = 325
 root = Dataset('hosiendata_wind_velocity.nc','r')
 vars = root.variables
 #Wind Velocity
-u = vars['eastward_vel'][:]
-v = vars['northward_vel'][:]
+u = 3.6*vars['eastward_vel'][:]
+v = 3.6*vars['northward_vel'][:]
 root.close()
 
 u=u[-1,:,:]
@@ -51,13 +51,17 @@ s1 = -s1.filled(np.nan)
 ncfile="ftle_80m.nc"
 root = Dataset(ncfile,'r') #read the data
 vars = root.variables #dictionary, all variables in dataset\
-ftle = vars['FTLE'][::6,:,:,0]#.reshape([ydim,xdim,tdim],order='C')
+ftle = 1/24*vars['FTLE'][:,:,:,0]#.reshape([ydim,xdim,tdim],order='C')
+time = 24*vars['time'][:]#,:,:,0]#.reshape([ydim,xdim,tdim],order='C')
 root.close()
+
+#np.savez('wrf_ftle_data.npz',ftle=ftle,time=time)
+
 data = [s1.ravel()]
 name = ['s1']
 
 timelen = ftle.shape[0]
-for tt in range(9):#timelen):
+for tt in range(timelen):
     if tt == 0:
         continue
     
@@ -67,12 +71,12 @@ for tt in range(9):#timelen):
     f =  np.ma.filled(f,np.nan)
     data.append(f.ravel())
     #name.append('{0:2.3f}hr'.format(tt))#tt/6))
-    name.append('{0:d}hr'.format(tt))#tt/6))
+    name.append('{0:f}hr'.format(tt))#tt/6))
 
 
 #Alldata = pd.DataFrame(np.transpose([s1.ravel(),ftle_2hr.ravel(),ftle_4hr.ravel(),ftle_6hr.ravel()]),columns=['s1','2hr','4hr','6hr'])
 Alldata = pd.DataFrame(np.transpose(data),columns=name)
-Alldata.corr().to_csv('Correlation_and_stats_v2.2_4paper.csv',mode='w',float_format='%1.3f')
+Alldata.corr().to_csv('Correlation_and_stats_wrf.csv',mode='w')#,float_format='%1.3f')
 #B=Alldata.describe()
 #B.to_csv('Correlation_and_stats_v2.csv',mode='a')
 

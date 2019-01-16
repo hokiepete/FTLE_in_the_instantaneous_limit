@@ -16,3 +16,4 @@ dg_eulerian_data.npz
 dg_eulerian_data.npz
 dg_eulerian_data.npz
 *.mat
+*.npz
