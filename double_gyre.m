@@ -72,10 +72,57 @@ surface(x,y,cor_numerical(:,:,3),'edgecolor','none')
 title('numerical correction')
 colorbar()
 
+%{
 figure
-surface(x,y,-s1_numerical(:,:,3)+0.5*cor_numerical(:,:,3),'edgecolor','none')
+surface(x,y,-s1_numerical(:,:,3)+1*cor_numerical(:,:,3),'edgecolor','none')
 title('numerical')
 colorbar()
+%}
+s1 = s1_numerical(:,:,3);
+c1 = cor_numerical(:,:,3);
+load dg_ftle_data_long
+ftle(1,:,:)=-s1;
+n = length(time);
+for i =1:n
+    T=time(i);
+    sig_approx = reshape(-s1-T*c1,[],1);
+    sig_true = reshape(ftle(i,:,:),[],1);
+    rmse_corrected(i) = sqrt(mean((sig_approx-sig_true).^2));
+    sa_bar = mean(sig_approx);
+    st_bar = mean(sig_true);
+    numerator = sum(sig_approx.*sig_true)-(n*sa_bar*st_bar);
+    den1 = sqrt(sum(sig_approx.^2)-n*sa_bar.^2);
+    den2 = sqrt(sum(sig_true.^2)-n*st_bar.^2)
+    denominator = den1*den2
+    cor_corrected(i) = numerator./denominator;
+    
+    sig_approx = reshape(-s1,[],1);
+    rmse_uncorrected(i) = sqrt(mean((sig_approx-sig_true).^2));
+    sa_bar = mean(sig_approx);
+    st_bar = mean(sig_true);
+    numerator = sum(sig_approx.*sig_true)-(n*sa_bar*st_bar);
+    den1 = sqrt(sum(sig_approx.^2)-n*sa_bar.^2);
+    den2 = sqrt(sum(sig_true.^2)-n*st_bar.^2)
+    denominator = den1*den2
+    cor_uncorrected(i) = numerator./denominator;
+    
+    %cor(i) = corr(sig_approx,sig_true);
+end
 
+figure
+subplot(121)
+hold on
+plot(-time,rmse_corrected,'b')
+plot(-time,rmse_uncorrected,'r')
+legend('-s1-T*corr','-s1')
+ylabel('rmse')
+xlabel('|T|')
+subplot(122)
+hold on
+plot(-time,cor_corrected,'b')
+plot(-time,cor_uncorrected,'r')
+ylabel('correlation')
+xlabel('|T|')
+legend('-s1-T*corr','-s1')
 
 %}
