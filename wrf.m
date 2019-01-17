@@ -1,13 +1,16 @@
-%{
+%
 close all
-clear all
+%clear all
 clc
 %
 dt=1 %hr
 dx=12 %kms
 dy=12 %kms
-
-
+%{
+dt=3600 %s
+dx=12*1000 %m
+dy=12*1000 %m
+%}
 ncfile='ftle_80m.nc';
 ncid=netcdf.open(ncfile,'NC_NOWRITE');
 
@@ -23,13 +26,16 @@ end
 %}
 
 time_ftle = netcdf.getVar(ncid,0); %days
-time_ftle=24*time_ftle(1:6:end); %hrs
+%time_ftle=24*time_ftle(1:6:end); %hrs
+time_ftle=24*time_ftle; %hrs
 lon = netcdf.getVar(ncid,1,'double');
 lat = netcdf.getVar(ncid,2,'double');
 ftle = netcdf.getVar(ncid,5); %days^{-1}
-ftle=permute(squeeze(ftle(1,:,:,1:6:end)),[2,1,3]);
+%ftle=permute(squeeze(ftle(1,:,:,1:6:end)),[2,1,3]);
+ftle=permute(squeeze(ftle(1,:,:,:)),[2,1,3]);
 ftle(ftle==999999)=nan;
 ftle=1/24*ftle; %hrs^{-1}
+[ydim,xdim,tdim]=size(ftle)
 %
 ncfile='hosiendata_wind_velocity.nc';
 ncid=netcdf.open(ncfile,'NC_NOWRITE');
@@ -42,7 +48,7 @@ v = netcdf.getVar(ncid,4); %m/s
 v = permute(v,[2,1,3]);
 v(v==999)=nan;
 v=3.6*v; %km/hr
-[ydim,xdim,tdim]=size(u);
+%[ydim,xdim,tdim]=size(u);
 %
 [dudx,dudy,dudt] = gradient(u,dx,dy,dt);
 [dvdx,dvdy,dvdt] = gradient(v,dx,dy,dt);
@@ -53,11 +59,11 @@ Dv = dvdt+u.*dvdx+v.*dvdy;
 [dDudx,dDudy,dDudt] = gradient(Du,dx,dy,dt);
 [dDvdx,dDvdy,dDvdt] = gradient(Dv,dx,dy,dt);
 
-for t =1:tdim
+for t =1:length(time_U)
     t
     for i =1:ydim
         for j = 1:xdim
-            if ~isnan(Du(i,j,t))|~isnan(Dv(i,j,t))
+            if ~isnan(Du(i,j,t))&&~isnan(Dv(i,j,t))
                 Grad_v = [dudx(i,j,t), dudy(i,j,t);dvdx(i,j,t), dvdy(i,j,t)];
                 Grad_D = [dDudx(i,j,t), dDudy(i,j,t); dDvdx(i,j,t), dDvdy(i,j,t)];
                 S = 0.5*(Grad_v + Grad_v');
@@ -80,14 +86,14 @@ for t =1:tdim
 end
 %ftle(s1_numerical==nan)=nan;
 %ftle(cor_numerical==nan)=nan;
-%
+%}
 figure
 subplot(121)
-surface(-s1_numerical(:,:,3),'edgecolor','none')
+surface(-s1_numerical(:,:,end),'edgecolor','none')
 title('numerical s1')
 colorbar()
 subplot(122)
-surface(cor_numerical(:,:,3),'edgecolor','none')
+surface(cor_numerical(:,:,end),'edgecolor','none')
 title('numerical correction')
 colorbar()
 %
@@ -105,7 +111,7 @@ time = time_ftle;
 n = length(time);
 for i =1:n
     T=-time(i);
-    ftle_t = squeeze(ftle(:,:,end+1-i))
+    ftle_t = squeeze(ftle(:,:,end+1-i));
     sig_true = reshape(ftle_t,[],1);
     sig_approx = reshape(-s1-T*c1,[],1);
     ind = ~isnan(sig_true) & ~isnan(sig_approx) ;
@@ -116,8 +122,8 @@ for i =1:n
     st_bar = mean(sig_true);
     numerator = sum(sig_approx.*sig_true)-(n*sa_bar*st_bar);
     den1 = sqrt(sum(sig_approx.^2)-n*sa_bar.^2);
-    den2 = sqrt(sum(sig_true.^2)-n*st_bar.^2)
-    denominator = den1*den2
+    den2 = sqrt(sum(sig_true.^2)-n*st_bar.^2);
+    denominator = den1*den2;
     cor_corrected(i) = numerator./denominator;
     
     sig_approx = reshape(-s1,[],1);
@@ -127,8 +133,8 @@ for i =1:n
     st_bar = mean(sig_true);
     numerator = sum(sig_approx.*sig_true)-(n*sa_bar*st_bar);
     den1 = sqrt(sum(sig_approx.^2)-n*sa_bar.^2);
-    den2 = sqrt(sum(sig_true.^2)-n*st_bar.^2)
-    denominator = den1*den2
+    den2 = sqrt(sum(sig_true.^2)-n*st_bar.^2);
+    denominator = den1*den2;
     cor_uncorrected(i) = numerator./denominator;
     
     %cor(i) = corr(sig_approx,sig_true);
