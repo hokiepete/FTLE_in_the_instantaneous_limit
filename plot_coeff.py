@@ -41,7 +41,6 @@ dt = x[1]-x[0]
 dy = np.gradient(y,dt)
 plt.figure(figsize=(8,6))
 plt.plot(x,dy)
-
 from netCDF4 import Dataset
 root = Dataset('hosiendata_wind_velocity.nc','r')
 vars = root.variables
@@ -71,7 +70,6 @@ Dv = dvdy+u*dvdx+v*dvdy
 dDudy,dDudx = np.gradient(Du,dy,dx,axis=(1,2))
 dDvdy,dDvdx = np.gradient(Dv,dy,dx,axis=(1,2))
 
-
 s1 = np.ma.empty([tdim,ydim,xdim])
 s2 = np.ma.empty([tdim,ydim,xdim])
 corr1 = np.ma.empty([tdim,ydim,xdim])
@@ -100,8 +98,10 @@ for t in range(tdim):
                 s2[t,i,j] = np.ma.masked
                 corr1[t,i,j] = np.ma.masked
                 corr2[t,i,j] = np.ma.masked
-                
-np.savez('wrf_eulerian_data.npz',s1=s1,s2=s2,corr1=corr1,corr2=corr2,time=time)
+
+#np.savez('wrf_eulerian_data.npz',s1=s1,s2=s2,corr1=corr1,corr2=corr2,time=time)
+import scipy.io as sio
+sio.savemat('wrf_eulerian_data.mat',{'u':u,'v':v,'time':time,'x':x,'y':y,'dx':dx,'dy':dy})
 #"""
 """
 with np.load('hossien_wrf_eulerian_data.npz') as F:

@@ -9,7 +9,7 @@ tdim = 145
 xdim = 405
 ydim = 325
 
-
+"""
 root = Dataset('hosiendata_wind_velocity.nc','r')
 vars = root.variables
 #Wind Velocity
@@ -47,16 +47,16 @@ s1 = np.ma.masked_where(s1==999999,s1)
 #s1 = s1 - s1.max(axis=None)
 #s1 = s1/s1.min(axis=None)
 s1 = -s1.filled(np.nan)
-
+"""
 ncfile="ftle_80m.nc"
 root = Dataset(ncfile,'r') #read the data
 vars = root.variables #dictionary, all variables in dataset\
-ftle = 1/24*vars['FTLE'][:,:,:,0]#.reshape([ydim,xdim,tdim],order='C')
-time = 24*vars['time'][:]#,:,:,0]#.reshape([ydim,xdim,tdim],order='C')
+ftle = vars['FTLE'][:,:,:,0]#.reshape([ydim,xdim,tdim],order='C')
+time = vars['time'][:]#,:,:,0]#.reshape([ydim,xdim,tdim],order='C')
 root.close()
 
 #np.savez('wrf_ftle_data.npz',ftle=ftle,time=time)
-
+"""
 data = [s1.ravel()]
 name = ['s1']
 
@@ -89,7 +89,7 @@ plt.colorbar()
 plt.figure(2)
 plt.pcolormesh(f)
 plt.colorbar()
-
+#"""
 
 
 
