@@ -137,7 +137,8 @@ el =10% 21
 alpT = 1.0
 alpS = 0.4
 font = 'cmr'
-fig=figure('units','inch','position',[0,0,6,6],'DefaultTextFontName', font, 'DefaultAxesFontName', font);
+width = 5+3/8
+fig=figure('units','inch','position',[0,0,width,width],'DefaultTextFontName', font, 'DefaultAxesFontName', font);
 i = 1
 subplot(2,2,1)
 hold on

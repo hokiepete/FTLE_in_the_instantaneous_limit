@@ -29,7 +29,7 @@ vars = root.variables
 lon = vars['lon'][:]
 lat = vars['lat'][:]
 
-figwidth = 6.5
+figwidth = 5+3/8#6.5
 FigSize=(figwidth, 0.32*figwidth)
 plt.figure(figsize=FigSize)
 tstart = calendar.timegm(time.strptime('Jun 1, 2017 @ 00:00:00 UTC', '%b %d, %Y @ %H:%M:%S UTC'))
@@ -78,4 +78,4 @@ divider = make_axes_locatable(ax2)
 cax = divider.append_axes('right', size='5%', pad=0.05)
 cbar=plt.colorbar(cs, cax=cax, orientation='vertical',format="%.2f");
 
-plt.savefig('s1_vs_s2.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
+plt.savefig('s1_vs_s2_v2.png', transparent=False, bbox_inches='tight',pad_inches=0.03)

@@ -36,20 +36,20 @@ end
 
 %
 for i=1:3
-    dirdiv = smooth3(dirdiv);
-    concav = smooth3(concav);
+    dirdiv1 = smooth3(dirdiv1);
+    concav1 = smooth3(concav1);
     s1 = smooth3(s1);
 end
 %}
-dirdiv(s1>0)=NaN;
-dirdiv(concav<=0)=NaN;
-dirdiv(xp<2.5)=NaN;
-dirdiv(xp>5)=NaN;
-dirdiv(yp<2)=NaN;
-dirdiv(yp>4.5)=NaN;
-dirdiv(zp<4)=NaN;
-dirdiv(abs(dirdiv)>0.2)=NaN;
-FV=isosurface(xp,yp,zp,dirdiv,0);
+dirdiv1(s1>0)=NaN;
+dirdiv1(concav1<=0)=NaN;
+dirdiv1(xp<2.5)=NaN;
+dirdiv1(xp>5)=NaN;
+dirdiv1(yp<2)=NaN;
+dirdiv1(yp>4.5)=NaN;
+dirdiv1(zp<4)=NaN;
+dirdiv1(abs(dirdiv1)>0.2)=NaN;
+FV=isosurface(xp,yp,zp,dirdiv1,0);
 %FV = smoothpatch(FV)
 %{
 figure
@@ -95,7 +95,7 @@ for i =1:n
     %scatter3(xx(i,:),yy(i,:),zz(i,:),'r.');
     dt = delaunayTriangulation(xx(i,:)',yy(i,:)',zz(i,:)');
     triboundary = convexHull(dt);
-    trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'red','edgecolor','none','FaceAlpha',0.7)
+    trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',0.7)
 
     xlabel('x')
     ylabel('y')
@@ -124,7 +124,8 @@ el =10% 21
 alpT = 1.0
 alpS = 0.4
 font = 'cmr'
-fig=figure('units','inch','position',[0,0,6,6],'DefaultTextFontName', font, 'DefaultAxesFontName', font);
+width = 5+3/8
+fig=figure('units','inch','position',[0,0,width,width],'DefaultTextFontName', font, 'DefaultAxesFontName', font);
 i = 1
 subplot(2,2,1)
 hold on
@@ -132,7 +133,7 @@ FV.vertices=squeeze(verts(i,:,:));
 patch(FV,'facecolor','blue','edgecolor','none','FaceAlpha',alpS);
 dt = delaunayTriangulation(xx(i,:)',yy(i,:)',zz(i,:)');
 triboundary = convexHull(dt);
-trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'red','edgecolor','none','FaceAlpha',alpT)
+trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',alpT)
 xlabel('x')
 ylabel('y')
 zlabel('z')
@@ -154,7 +155,7 @@ FV.vertices=squeeze(verts(i,:,:));
 patch(FV,'facecolor','blue','edgecolor','none','FaceAlpha',alpS);
 dt = delaunayTriangulation(xx(i,:)',yy(i,:)',zz(i,:)');
 triboundary = convexHull(dt);
-trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'red','edgecolor','none','FaceAlpha',alpT)
+trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',alpT)
 xlabel('x')
 ylabel('y')
 zlabel('z')
@@ -177,7 +178,7 @@ FV.vertices=squeeze(verts(i,:,:));
 patch(FV,'facecolor','blue','edgecolor','none','FaceAlpha',alpS);
 dt = delaunayTriangulation(xx(i,:)',yy(i,:)',zz(i,:)');
 triboundary = convexHull(dt);
-trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'red','edgecolor','none','FaceAlpha',alpT)
+trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',alpT)
 xlabel('x')
 ylabel('y')
 zlabel('z')
@@ -197,7 +198,7 @@ FV.vertices=squeeze(verts(i,:,:));
 patch(FV,'facecolor','blue','edgecolor','none','FaceAlpha',alpS);
 dt = delaunayTriangulation(xx(i,:)',yy(i,:)',zz(i,:)');
 triboundary = convexHull(dt);
-trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'red','edgecolor','none','FaceAlpha',alpT)
+trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',alpT)
 xlabel('x')
 ylabel('y')
 zlabel('z')
@@ -220,7 +221,7 @@ FV.vertices=squeeze(verts(i,:,:));
 patch(FV,'facecolor','blue','edgecolor','none');
 dt = delaunayTriangulation(xx(i,:)',yy(i,:)',zz(i,:)');
 triboundary = convexHull(dt);
-trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'red','edgecolor','none','FaceAlpha',0.7)
+trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',0.7)
 xlabel('x')
 ylabel('y')
 zlabel('z')
@@ -236,7 +237,7 @@ view(-124,32)
 subplot(3,2,6)
 dt = delaunayTriangulation(xx(i,:)',yy(i,:)',zz(i,:)');
 triboundary = convexHull(dt);
-trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'red','edgecolor','none','FaceAlpha',0.7)
+trisurf(triboundary,xx(i,:)',yy(i,:)',zz(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',0.7)
 xlabel('x')
 ylabel('y')
 zlabel('z')
