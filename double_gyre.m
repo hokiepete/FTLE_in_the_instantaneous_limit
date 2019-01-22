@@ -117,20 +117,14 @@ for i =1:n
 end
 
 figure
-subplot(121)
+
 hold on
 plot(-time,rmse_corrected,'b')
 plot(-time,rmse_uncorrected,'r')
+xlim([0,0.7])
 legend('-s1-T*corr','-s1')
 ylabel('rmse')
 xlabel('|T|')
-subplot(122)
-hold on
-plot(-time,cor_corrected,'b')
-plot(-time,cor_uncorrected,'r')
-ylabel('correlation')
-xlabel('|T|')
-legend('-s1-T*corr','-s1')
 
 save dg_plot_data rmse_corrected rmse_uncorrected time
 

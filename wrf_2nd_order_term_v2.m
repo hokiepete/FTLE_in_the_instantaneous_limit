@@ -155,16 +155,17 @@ size(rmse_corrected);
 %
 t_want=linspace(0,0.7,101);
 int = 1
-yy = interp1(-time(1:int:end),rmse_corrected(1:int:end),t_want,'spline')
-xx = interp1(-time(1:int:end),rmse_uncorrected(1:int:end),t_want,'spline')
-
+rmse_corrected = interp1(-time(1:int:end),rmse_corrected(1:int:end),t_want,'spline')
+rmse_uncorrected = interp1(-time(1:int:end),rmse_uncorrected(1:int:end),t_want,'spline')
+time = t_want;
 %yy = interp1(-time,rmse_corrected,t_want,'spline')
-fig=figure
+font = 'cmr'
+width = 5+3/8
+ratio =1.61803398875;
+fig=figure('units','inch','position',[0,0,width,width/ratio],'DefaultTextFontName', font, 'DefaultAxesFontName', font);
 hold on
-plot(-time(1:end),rmse_corrected(1:end),'b.-')
-plot(t_want,yy,'b.-')
-plot(-time(1:end),rmse_uncorrected(1:end),'r-')
-plot(t_want,xx,'r.-')
+plot(t_want,rmse_corrected,'m-')
+plot(t_want,rmse_uncorrected,'b-')
 legend('-s1-T*corr','-s1','Location','southeast')
 ylabel('RMSE hr^{-1}')
 xlabel('|T| hr')

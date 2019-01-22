@@ -126,6 +126,6 @@ plot(time,rmse_uncorrected,'r.-')
 legend('-s1-T*corr','-s1','Location','southeast')
 ylabel('RMSE hr^{-1}')
 xlabel('|T| hr')
-
+xlim([0,0.7])
 save abc_plot_data rmse_corrected rmse_uncorrected time
 
