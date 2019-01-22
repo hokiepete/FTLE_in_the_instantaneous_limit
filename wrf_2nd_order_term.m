@@ -4,8 +4,8 @@ clear all
 clc
 
 dt=1 %hr
-dx=3 %kms
-dy=3 %kms
+dx=3.4 %kms
+dy=3.4 %kms
 %{
 dt=3600 %s
 dx=12*1000 %m
@@ -33,7 +33,7 @@ Dv = dvdt+u.*dvdx+v.*dvdy;
 [dDudx,dDudy,dDudt] = gradient(Du,dx,dy,dt);
 [dDvdx,dDvdy,dDvdt] = gradient(Dv,dx,dy,dt);
 
-for t =1:length(time_U)
+for t =25:length(time_U)
     t
     for i =1:ydim
         for j = 1:xdim
@@ -59,14 +59,10 @@ for t =1:length(time_U)
     end
 end
 
-fig = figure
-
-
-ncfile='ftle_80m.nc';
+ncfile='ftle_80m_old.nc';
 ncid=netcdf.open(ncfile,'NC_NOWRITE');
-
 %{
-Grab NC data
+%Grab NC data
 [ndims,nvars,ngatts,unlimdimid] = netcdf.inq(ncid);
 %
 %Loop through NC data infomation
@@ -138,24 +134,29 @@ for i =1:n
     %cor(i) = corr(sig_approx,sig_true);
 end
 %time=time(2:27)
+close all
+%{
 start = 1;
 stop = 14;
-close all
 %time = time*60;
 time=time(start:stop);
 rmse_corrected=rmse_corrected(start:stop);
 rmse_uncorrected=rmse_uncorrected(start:stop);
 cor_corrected=cor_corrected(start:stop);
 cor_uncorrected=cor_uncorrected(start:stop);
+%}
 size(time);
 size(rmse_corrected);
 %subplot(121)
+figure
 hold on
-plot(time,rmse_corrected,'b.-')
-plot(time,rmse_uncorrected,'r.-')
+plot(time(1:end),rmse_corrected(1:end),'b.-')
+plot(time(1:end),rmse_uncorrected(1:end),'r.-')
 legend('-s1-T*corr','-s1','Location','southeast')
 ylabel('RMSE hr^{-1}')
 xlabel('|T| hr')
+
+save wrf_plot_data rmse_corrected rmse_uncorrected time
 %{
 subplot(122)
 hold on
@@ -171,4 +172,12 @@ cor_min(j) = min(rmse_corrected)
 uncor_min(j) = min(rmse_uncorrected)
 end
 figure;hold on;plot(weight,cor_min,'b-');plot(weight,uncor_min,'r-')
+figure
+subplot(121)
+surface(-s1,'edgecolor','none')
+colorbar
+subplot(122)
+surface(ftle(:,:,1),'edgecolor','none')
+colorbar
+
 %}

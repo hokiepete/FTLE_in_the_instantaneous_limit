@@ -4,8 +4,8 @@ clc
 %y=0:0.01:0.5;
 %y=y(:);
 
-xdim = 301;
-ydim = 151;
+xdim = 101;
+ydim = 51;
 xmin = 0
 xmax = 2
 ymin = 0;
@@ -20,7 +20,7 @@ A = 0.1;
 w = 0.2.*pi;
 e = 0.25;
 
-time = linspace(-0.1,0.1,5);
+time = linspace(-0.01,0.01,3);
 dt = time(2)-time(1);
 for i =1:length(time)
     t=time(i);
@@ -64,11 +64,11 @@ end
 
 figure
 subplot(121)
-surface(x,y,-s1_numerical(:,:,3),'edgecolor','none')
+surface(x,y,-s1_numerical(:,:,2),'edgecolor','none')
 title('numerical s1')
 colorbar()
 subplot(122)
-surface(x,y,cor_numerical(:,:,3),'edgecolor','none')
+surface(x,y,cor_numerical(:,:,2),'edgecolor','none')
 title('numerical correction')
 colorbar()
 
@@ -78,9 +78,16 @@ surface(x,y,-s1_numerical(:,:,3)+1*cor_numerical(:,:,3),'edgecolor','none')
 title('numerical')
 colorbar()
 %}
-s1 = s1_numerical(:,:,3);
-c1 = cor_numerical(:,:,3);
-load dg_ftle_data_long
+s1 = s1_numerical(:,:,2);
+c1 = cor_numerical(:,:,2);
+%load dg_ftle_data_long
+load sigma_big
+
+t0 = 0
+tf = -0.96
+time = linspace(t0,tf,101);
+
+ftle=sigma;
 ftle(1,:,:)=-s1;
 n = length(time);
 for i =1:n
@@ -124,5 +131,7 @@ plot(-time,cor_uncorrected,'r')
 ylabel('correlation')
 xlabel('|T|')
 legend('-s1-T*corr','-s1')
+
+save dg_plot_data rmse_corrected rmse_uncorrected time
 
 %}

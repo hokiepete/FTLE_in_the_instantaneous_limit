@@ -17,3 +17,5 @@ dg_eulerian_data.npz
 dg_eulerian_data.npz
 *.mat
 *.npz
+ftle_80m_old.nc
+ftle_80m_small.nc
