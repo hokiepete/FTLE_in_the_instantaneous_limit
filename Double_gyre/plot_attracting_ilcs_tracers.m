@@ -39,8 +39,8 @@ lims = [0,0,0;
 ];
 %0,0,1;
 %2,1,1
-n=25;
-tend=10
+n=31;
+tend=30
 twant = linspace(0,tend,n);
 for i = 1:length(x1)
     y01=[x1(i),y1(i),z1(i)];

@@ -163,36 +163,87 @@ font = 'cmr'
 width = 5+3/8
 ratio =1.61803398875;
 fig=figure('units','inch','position',[0,0,width,width/ratio],'DefaultTextFontName', font, 'DefaultAxesFontName', font);
+subplot(121)
 hold on
 plot(t_want,rmse_corrected,'m-')
 plot(t_want,rmse_uncorrected,'b-')
-legend('-s1-T*corr','-s1','Location','southeast')
+legend('-s1-T*corr','-s1','Location','northwest')
 ylabel('RMSE hr^{-1}')
 xlabel('|T| hr')
 xlim([0,0.7])
 %    
-save wrf_plot_data rmse_corrected rmse_uncorrected time
+%save wrf_plot_data rmse_corrected rmse_uncorrected time
+
+ncfile='ftle_80m.nc';
+ncid=netcdf.open(ncfile,'NC_NOWRITE');
+
+time_ftle = netcdf.getVar(ncid,0); %days
+%time_ftle=24*time_ftle(1:6:end); %hrs
+time_ftle=24*time_ftle; %hrs
+lon = netcdf.getVar(ncid,1,'double');
+lat = netcdf.getVar(ncid,2,'double');
+ftle = netcdf.getVar(ncid,4); %days^{-1}
+%ftle=permute(squeeze(ftle(1,:,:,1:6:end)),[2,1,3]);
+ftle=permute(squeeze(ftle(1,:,:,:)),[2,1,3]);
+ftle(ftle==999999)=nan;
+%ftle=1/(24*3.4)*ftle; %hrs^{-1}
+ftle=1/(24)*ftle; %hrs^{-1}
+[ydim,xdim,tdim]=size(ftle)
+%
+%ftle(s1_numerical==nan)=nan;
+%ftle(cor_numerical==nan)=nan;
+%}
+
+%
 %{
+figure
+surface(x,y,-s1_numerical(:,:,3)+1*cor_numerical(:,:,3),'edgecolor','none')
+title('numerical')
+colorbar()
+%}
+%}
+s1 = s1_numerical(:,:,end);
+c1 = cor_numerical(:,:,end);
+ftle(:,:,end)=-s1;
+time = 22-time_ftle;
+n = length(time);
+for i =1:n
+    T=time(i);
+    ftle_t = squeeze(ftle(:,:,end+1-i));
+    sig_true = reshape(ftle_t,[],1);
+    sig_approx = reshape(-s1-T*c1,[],1);
+    ind = ~isnan(sig_true) & ~isnan(sig_approx) ;
+    sig_true = sig_true(ind);
+    sig_approx = sig_approx(ind);
+    rmse_corrected(i) = sqrt(mean((sig_approx-sig_true).^2));
+    sa_bar = mean(sig_approx);
+    st_bar = mean(sig_true);
+    n=length(sig_true);
+    numerator = sum(sig_approx.*sig_true)-(n*sa_bar*st_bar);
+    den1 = sqrt(sum(sig_approx.^2)-n*sa_bar.^2);
+    den2 = sqrt(sum(sig_true.^2)-n*st_bar.^2);
+    denominator = den1*den2;
+    cor_corrected(i) = numerator./denominator;
+
+    sig_approx = reshape(-s1,[],1);
+    sig_approx = sig_approx(ind);
+    rmse_uncorrected(i) = sqrt(mean((sig_approx-sig_true).^2));
+    sa_bar = mean(sig_approx);
+    st_bar = mean(sig_true);
+    numerator = sum(sig_approx.*sig_true)-(n*sa_bar*st_bar);
+    den1 = sqrt(sum(sig_approx.^2)-n*sa_bar.^2);
+    den2 = sqrt(sum(sig_true.^2)-n*st_bar.^2);
+    denominator = den1*den2;
+    cor_uncorrected(i) = numerator./denominator;
+
+    %cor(i) = corr(sig_approx,sig_true);
+end
+
 subplot(122)
 hold on
-plot(time,cor_corrected,'b')
-plot(time,cor_uncorrected,'r')
-ylabel('correlation')
-xlabel('|T|')
-legend('-s1-T*corr','-s1','Location','southwest')
-%saveas(fig,sprintf('%1.1f.fig',Q))
-%
-weight(j) = Q
-cor_min(j) = min(rmse_corrected)
-uncor_min(j) = min(rmse_uncorrected)
-end
-figure;hold on;plot(weight,cor_min,'b-');plot(weight,uncor_min,'r-')
-figure
-subplot(121)
-surface(-s1,'edgecolor','none')
-colorbar
-subplot(122)
-surface(ftle(:,:,1),'edgecolor','none')
-colorbar
-
-%}
+plot(-time,rmse_corrected,'m-')
+plot(-time,rmse_uncorrected,'b-')
+legend('-s1-T*corr','-s1','Location','northwest')
+ylabel('RMSE hr^{-1}')
+xlabel('|T| hr')
+xlim([0,0.7])
