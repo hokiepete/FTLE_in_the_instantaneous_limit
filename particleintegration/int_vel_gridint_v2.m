@@ -3,9 +3,9 @@ close all
 clear all
 clc
 load wrf_vel_data
-xwant = 31%405
-ywant= 31%325
-t_want = linspace(24,22,121);
+xwant = 51%405
+ywant= 51%325
+t_want = linspace(24*3600,22*3600,121);
 yy=linspace(0,972000,ywant);
 xx=linspace(0,1212000,xwant);
 P = [2,1,3];
@@ -13,9 +13,9 @@ u = permute(u,P);
 v = permute(v,P);
 x = permute(x,P);
 y = permute(y,P);
-t = permute(t,P);
-U = griddedInterpolant(x,y,t,u,'spline','linear')
-V = griddedInterpolant(x,y,t,v,'spline','linear')
+time = permute(time,P);
+U = griddedInterpolant(x,y,time,u,'spline','spline')
+V = griddedInterpolant(x,y,time,v,'spline','spline')
 
 [xx,yy]=meshgrid(xx,yy);
 fx = NaN(ywant,xwant,121);
@@ -38,15 +38,15 @@ save flow_map_gridint_v2 fx fy xx yy time
 end
 
 function dydt = odefun_gridint(t,Y,U,V)
-    %Y(1),Y(2),t
-    [Y(1),Y(1)-1212000,Y(2),Y(2)-972000]
+    %[Y(1),Y(2),t]
+    %[Y(1),Y(1)-1212000,Y(2),Y(2)-972000]
     dydt = zeros(2,1);
     dydt(1) = U(Y(1),Y(2),t);%interp3(x,y,time,u,Y(1),Y(2),t,'spline');
     dydt(2) = V(Y(1),Y(2),t);%interp3(x,y,time,v,Y(1),Y(2),t,'spline');
 end
 
 function [value,isterminal,direction]=eventfun_gridint(t,Y,U,V)
-    value=[Y(1),Y(1)-1212000,Y(2),Y(2)-972000];
+    value=[Y(1)+0.0000001,Y(1)-1212000.0000001,Y(2)+0.0000001,Y(2)-972000.0000001];
     isterminal=[1,1,1,1];
     direction=[0,0,0,0];
 end
