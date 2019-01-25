@@ -1,29 +1,11 @@
-%
+
 close all
 clear all
 clc
 
-dt=1 %hr
-dx=3 %kms
-dy=3 %kms
+load wrf_vel_data
+dt = 
 %{
-dt=3600 %s
-dx=12*1000 %m
-dy=12*1000 %m
-%}
-ncfile='hosiendata_wind_velocity.nc';
-ncid=netcdf.open(ncfile,'NC_NOWRITE');
-time_U = netcdf.getVar(ncid,0);
-u = netcdf.getVar(ncid,3); %m/s
-u = permute(u,[2,1,3]);
-u(u==999)=nan;
-u=3.6*u; %km/hr
-v = netcdf.getVar(ncid,4); %m/s
-v = permute(v,[2,1,3]);
-v(v==999)=nan;
-v=3.6*v; %km/hr
-[ydim,xdim,tdim]=size(u);
-%
 [dudx,dudy,dudt] = gradient(u,dx,dy,dt);
 [dvdx,dvdy,dvdt] = gradient(v,dx,dy,dt);
 
@@ -136,6 +118,7 @@ title('numerical')
 colorbar()
 %}
 %}
+%{
 s1 = s1_numerical(:,:,end);
 %c1 = cor_numerical(:,:,end);
 l1 = l1_numerical(:,:,end);
@@ -215,4 +198,5 @@ cor_min(j) = min(rmse_2ncorrected)
 uncor_min(j) = min(rmse_uncorrected)
 end
 figure;hold on;plot(weight,cor_min,'b-');plot(weight,uncor_min,'r-')
+%}
 %}

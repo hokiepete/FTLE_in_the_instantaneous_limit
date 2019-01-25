@@ -24,13 +24,13 @@ for t = 1:tlen
                              dfydx(i,j),dfydy(i,j)];
                     C = gradF'*gradF;
                     lambda = max(eig(C));
-                    sigma(i,j,t) = 1/(2*abs(T(t)))*log(lambda);
+                    sigma(t,i,j) = 1/(2*abs(T(t)))*log(lambda);
                 else
-                    sigma(i,j,t) = nan;
+                    sigma(t,i,j) = nan;
                 end
             end
         end
     end
 end
 
-save('FTLE_wrf.mat', 'sigma', 'T','xx','yy');
+save('FTLE_wrf.mat', 'sigma', 'T');

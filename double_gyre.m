@@ -72,6 +72,9 @@ surface(x,y,cor_numerical(:,:,2),'edgecolor','none')
 title('numerical correction')
 colorbar()
 
+s1 = squeeze(s1_numerical(:,:,2));
+c1 = squeeze(cor_numerical(:,:,2));
+save dg_eulerian_data s1 c1 x y
 %{
 figure
 surface(x,y,-s1_numerical(:,:,3)+1*cor_numerical(:,:,3),'edgecolor','none')
