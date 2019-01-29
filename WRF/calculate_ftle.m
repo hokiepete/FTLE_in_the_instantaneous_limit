@@ -24,9 +24,9 @@ for t = 1:tlen
                              dfydx(i,j),dfydy(i,j)];
                     C = gradF'*gradF;
                     lambda = max(eig(C));
-                    sigma(t,i,j) = 1/(2*abs(T(t)))*log(lambda);
+                    sigma(i,j,t) = 1/(2*abs(T(t)))*log(lambda);
                 else
-                    sigma(t,i,j) = nan;
+                    sigma(i,j,t) = nan;
                 end
             end
         end
