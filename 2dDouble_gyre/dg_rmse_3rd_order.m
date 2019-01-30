@@ -11,6 +11,7 @@ n = length(T);
 for i =1:n
     ftle_t = squeeze(sigma(:,:,i));
     sig_true = reshape(ftle_t,[],1);
+    meanf = mean(sig_true);
     sig_approx = reshape(-s1-T(i)*(-s1.^2+0.5*l1+T(i)*(4/3*s1.^3-s1.*l1+0.25*l2)),[],1);
     ind = ~isnan(sig_true) & ~isnan(sig_approx) ;
     sig_true = sig_true(ind);
@@ -28,7 +29,6 @@ for i =1:n
     sig_approx = reshape(-s1-T(i)*(-s1.^2+0.5*l1),[],1);
     sig_approx = sig_approx(ind);
     rmse2(i) = sqrt(mean((sig_approx-sig_true).^2));
-    meanf(i) = mean(sig_true);
     mean2(i) = mean(sig_approx);
     sa_bar = mean(sig_approx);
     st_bar = mean(sig_true);
@@ -83,14 +83,13 @@ xlabel('|T| s')
 
 
 figure
-hold on
 plot(abs(T),meanf,'k.-')
 plot(abs(T),mean2,'b.-')
 plot(abs(T),mean1,'r.-')
-legend('FTLE','-s1-T*corr','-s1','Location','southwest')
+legend('FTLE','-s1-T*corr','-s1','Location','northeast')
 ylabel('s^{-1}')
 xlabel('|T| s')
-title('Spatial Mean by time')
+title('means')
 
 
 %
