@@ -1,7 +1,7 @@
 clear all
 close all
 clc
-y=0:0.01:0.5;
+y=-0.5:0.005:0.5;
 dy = y(2)-y(1);
 dx = dy;%y(2)-y(1);
 dt=1;
@@ -9,87 +9,70 @@ ydim = length(y);
 xdim=ydim;
 [x,y]=meshgrid(y,y);
 %y=y(:);
-
-
-for t =1:3
-    u(:,:,t) = x;
-    v(:,:,t) = -y-y.^3;
-end
-
-[dudx,dudy,dudt] = gradient(u,dx,dy,1);
-[dvdx,dvdy,dvdt] = gradient(v,dx,dy,1);
-
-Du = dudt+u.*dudx+v.*dudy;
-Dv = dvdt+u.*dvdx+v.*dvdy;
-
-[dDudx,dDudy,dDudt] = gradient(Du,dx,dy,1);
-[dDvdx,dDvdy,dDvdt] = gradient(Dv,dx,dy,1);
-
-au = dudt;
-av = dvdt;
-
-[daudx,daudy,daudt] = gradient(au,dx,dy,dt);
-[davdx,davdy,davdt] = gradient(av,dx,dy,dt);
-
-[daudtdx,daudtdy,daudtdt] = gradient(daudt,dx,dy,dt);
-[davdtdx,davdtdy,davdtdt] = gradient(davdt,dx,dy,dt);
-
-
-Dau = daudt+u.*daudx+v.*daudy;
-Dav = davdt+u.*davdx+v.*davdy;
-
-[dDaudx,dDaudy,dDaudt] = gradient(Dau,dx,dy,dt);
-[dDavdx,dDavdy,dDavdt] = gradient(Dav,dx,dy,dt);
-
-
-
-
-for t =1:3
-    for i =1:ydim
-        for j = 1:xdim
-            Grad_v = [dudx(i,j,t), dudy(i,j,t);dvdx(i,j,t), dvdy(i,j,t)];
-            Grad_D = [dDudx(i,j,t), dDudy(i,j,t); dDvdx(i,j,t), dDvdy(i,j,t)];
-            Grad_a = [daudx(i,j,t), daudy(i,j,t);davdx(i,j,t), davdy(i,j,t)];
-            Grad_Da = [dDaudx(i,j,t), dDaudy(i,j,t); dDavdx(i,j,t), dDavdy(i,j,t)];
-            Grad_dadt = [daudtdx(i,j,t), daudtdy(i,j,t); davdtdx(i,j,t), davdtdy(i,j,t)];
-            S = 0.5*(Grad_v + Grad_v');
-            B = 0.5*(Grad_D + Grad_D')+(Grad_v'*Grad_v);
-            %Q = 0.5*(Grad_Da + Grad_Da')+(Grad_v'*Grad_a+Grad_a'*Grad_v);
-            Q = 0.5*(Grad_dadt + Grad_dadt')+(Grad_v'*Grad_a+Grad_a'*Grad_v);
-            [V,D] = eig(S);
-            if ~issorted(diag(D))
-                [D,I] = sort(diag(D));
-                V = V(:, I);
-            end
-            s1_numerical(i,j,t) = D(1,1);
-            X0 = V(:,1);
-            l1_numerical(i,j,t) = X0'*B*X0;
-            
-            AA = (l1_numerical(i,j,t)*eye(size(B))-B)*X0;
-            BB = S-s1_numerical(i,j,t)*eye(size(B));
-            if BB(1,2)==0;
-                X1(1,1)=AA(1);
-            else
-                error('uh oh b!=0')
-            end
-            
-            if B(2,1)==0;
-                X1(2,1)=AA(2);
-            else
-                error('uh oh c!=0')
-            end
-            %}
-            
-            %X1 = pinv(-((B-l1_numerical(i,j,t)*eye(size(B)))*X0)\(S-s1_numerical(i,j,t)*eye(size(B))));
-            %X1=X1';
-            %res(i,j,t,:)=-((B-l1_numerical(i,j,t)*eye(size(B)))*X0)-(S-s1_numerical(i,j,t)*eye(size(B)))*X1;
-            l2_numerical(i,j,t) = X0'*Q*X0 + X0'*B*X1 - l1_numerical(i,j,t)*X0'*X1;
-              
+R = [0,-1;1,0];
+for i =1:ydim
+    for j = 1:xdim
+        i,j
+        S = [1,0;0,-(1+3*y(i,j)^2)];
+        B = [2,0;0,(2+18*y(i,j)^2+24*y(i,j)^4)];
+        Q = [8/3,0;0,-(8/3+56*y(i,j)^2+192*y(i,j)^4+160*y(i,j)^6)];
+        [V,D] = eig(S);
+        if ~issorted(diag(D))
+            [D,I] = sort(diag(D));
+            V = V(:, I);
         end
+        s1(i,j) = D(1,1);
+        X0 = V(:,1);
+        l1(i,j) = X0'*B*X0;
+                
+        X1 = -((B-l1(i,j)*eye(size(B)))*X0)\(S-s1(i,j)*eye(size(B)));
+        if sum(X1)~=0
+            X1=X1'/norm(X1);
+        else
+            X1=X1';
+        end
+        l2_a(i,j) = X0'*Q*X0 + X0'*B*X1 - X0'*S*X1;
+        m = X0'*R'*(S-s1(i,j)*eye(size(S)))*R*X0;
+        d = X0'*R'*B*X0;
+        l2_b(i,j) = X0'*Q*X0-d.^2/m;
+        
+        
+        
+        
+        
     end
 end
 
+l2_analytic = -(8/3 + 56*y.^2 + 192*y.^4 + 160*y.^6);
 
+figure
+subplot(131)
+surface(x,y,l2_a,'edgecolor','none')
+title('X0^T*Q*X0 + X0^T*B*X1 - X0^T*S*X1')
+colorbar
+subplot(132)
+surface(x,y,l2_b,'edgecolor','none')
+title('X0^T*Q*X0-d.^2/m')
+colorbar
+subplot(133)
+surface(x,y,l2_analytic,'edgecolor','none')
+title('analytic')
+colorbar
+
+
+figure
+subplot(121)
+surface(x,y,abs((l2_a-l2_analytic))./abs(l2_analytic),'edgecolor','none')
+title('rel error, X0^T*Q*X0 + X0^T*B*X1 - X0^T*S*X1')
+colorbar()
+subplot(122)
+surface(x,y,abs((l2_b-l2_analytic))./abs(l2_analytic),'edgecolor','none')
+title('rel error, X0^T*Q*X0-d.^2/m')
+colorbar()
+
+
+
+%{
 s1_analytic = -(1+3*y.^2);
 l1_analytic = 2 + 18*y.^2 + 24*y.^4;
 l2_analytic = -(8/3 + 56*y.^2 + 192*y.^4 + 160*y.^6);
@@ -216,4 +199,5 @@ xlabel('|T|');
 ylabel('Root mean-squared error');
 
 
+%}
 %}
