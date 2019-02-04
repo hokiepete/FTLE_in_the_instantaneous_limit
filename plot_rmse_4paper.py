@@ -4,6 +4,7 @@ import scipy.io as sio
 
 matplotlib.rcParams['text.usetex']=True
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
+matplotlib.rcParams['lines.linewidth']=1
 plt.rc('font', **{'family': 'serif', 'serif': ['cmr10']})
 titlefont = {'fontsize':12}
 labelfont = {'fontsize':10}
@@ -27,7 +28,7 @@ plt.plot(t,rmse3,'k-')
 plt.ylabel('FTLE field root mean-squared error',**labelfont)
 plt.xlabel('$|T|$',**labelfont)
 plt.axis('tight')
-plt.xlim([0,0.02])
+#plt.xlim([0,0.02])
 plt.savefig('dg_rmse.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
 plt.savefig('dg_rmse.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
 
@@ -44,7 +45,7 @@ plt.plot(-t,rmse2,'m-')
 plt.plot(-t,rmse3,'k-')
 plt.ylabel('FTLE field root mean-squared error',**labelfont)
 plt.xlabel('$|T|$',**labelfont)
-plt.xlim([0,400])
+#plt.xlim([0,400])
 plt.savefig('wrf_rmse.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
 plt.savefig('wrf_rmse.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
 
