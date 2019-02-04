@@ -1,18 +1,18 @@
 clear all
 close all
 clc
-lenx = 101
-lenyz = 51
+lenx = 301
+lenyz = 151
 tlen = 101
 t0 = 0
-tf = -0.96
+tf = -0.2
 x = linspace(0,2,lenx);
 dx=x(2)-x(1);
 y = linspace(0,1,lenyz);
 dy=y(2)-y(1);
 twant = linspace(t0,tf,tlen);
 [x,y] = meshgrid(x,y);
-options = odeset('RelTol',1e-8,'AbsTol',1e-8);
+options = odeset('RelTol',1e-12,'AbsTol',1e-12);
 for i = 1:lenyz
     i
     for j = 1:lenx
@@ -46,4 +46,4 @@ for t = 1:tlen
 end
 size(sigma)
 time=twant;
-save('sigma_big.mat', 'sigma','time');
+save('dg_sigma_big_short.mat', 'sigma','time');

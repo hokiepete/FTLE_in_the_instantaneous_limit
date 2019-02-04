@@ -117,4 +117,4 @@ set(gca, 'YScale', 'log')
 set(gca, 'XScale', 'log')
 %}
 
-%save wrf_plot_data rmse_corrected rmse_uncorrected time
+save wrf_plot_data rmse1 rmse2 rmse3 T

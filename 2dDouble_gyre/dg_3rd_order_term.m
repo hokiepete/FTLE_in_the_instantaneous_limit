@@ -3,8 +3,8 @@ close all
 clear all
 clc
 
-xdim = 101;
-ydim = 51;
+xdim = 301;
+ydim = 151;
 xmin = 0
 xmax = 2
 ymin = 0;
@@ -19,7 +19,7 @@ A = 0.1;
 w = 0.2.*pi;
 e = 0.25;
 tdim = 3;
-t0 = 0.5*pi
+t0 = 0%0.5*pi
 time = linspace(-0.01+t0,0.01+t0,tdim);
 dt = time(2)-time(1);
 for i =1:length(time)
@@ -71,14 +71,24 @@ for t =1:tdim
                 X0 = V(:,1);
                 xi(i,j,t,:) = V(:,1);
                 l1(i,j,t) = X0'*B*X0;
+                %
                 X1 = -((B-l1(i,j,t)*eye(size(B)))*X0)\(S-s1(i,j,t)*eye(size(B)));
-                X1=X1'/norm(X1);
+                if sum(X1)~=0
+                    X1=X1'/norm(X1);
+                else
+                    X1=X1';
+                end
+                %}
+                %X1 = -R*X0;
                 l2(i,j,t) = X0'*Q*X0 + X0'*B*X1 - X0'*S*X1;
+                db(i,j,t) = X0'*B*X1 - X0'*S*X1;
                 a1(i,j,t)=l2(i,j,t);
                 %Xp = R*X0;
                 m = X0'*R'*(S-s1(i,j,t)*eye(size(S)))*R*X0;
                 d = X0'*R'*B*X0;
-                l2(i,j,t) = X0'*Q*X0-d.^2/m;
+                dd(i,j,t)=d;
+                mm(i,j,t)=m;
+                l2(i,j,t) = X0'*Q*X0-d.^2/m;%m/(X0'*Q*X0*m-d.^2);%X0'*Q*X0-d.^2/m;
                 a2(i,j,t)=l2(i,j,t);
                 %X1 = V(:,1);
                 %l1(i,j,t) = X1'*B*X1;
@@ -96,16 +106,59 @@ for t =1:tdim
 end
 
 save dg_correction3rd s1 l1 l2
-save error_comparison s1 l1 a1 a2
+save dg_error_comparison s1 l1 a1 a2 dd db
 
 figure
+subplot(421)
+surface(db(:,:,2),'edgecolor','none')
+title('X0^T*B*X1 - X0^T*S*X1')
+colorbar
+axis tight
+subplot(422)
+surface(-dd(:,:,2).^2,'edgecolor','none')
+title('-d^2')
+axis tight
+colorbar
+subplot(423)
+surface(mm(:,:,2),'edgecolor','none')
+title('\mu')
+axis tight
+colorbar
+subplot(424)
+surface(-dd(:,:,2).^2./mm(:,:,2),'edgecolor','none')
+title('-d^2/\mu')
+axis tight
+colorbar
+subplot(425)
+surface(-dd(:,:,2),'edgecolor','none')
+title('-d')
+axis tight
+colorbar
+subplot(426)
+surface(-dd(:,:,2)./mm(:,:,2),'edgecolor','none')
+title('-d/\mu')
+axis tight
+colorbar
+subplot(427)
+surface(-dd(:,:,2).^2./(mm(:,:,2)+1.5),'edgecolor','none')
+title('-d^2/(\mu+1.5)')
+axis tight
+colorbar
+subplot(428)
+surface(-dd(:,:,2).^2./1.25,'edgecolor','none')
+title('-d^2/(1.25)')
+axis tight
+colorbar
+
+%
+figure
 subplot(121)
-surface(a1(:,:,1),'edgecolor','none')
+surface(a1(:,:,2),'edgecolor','none')
 title('lambda2 = X0^T*Q*X0 + X0^T*B*X1 - X0^T*S*X1')
 colorbar
 axis tight
 subplot(122)
-surface(a2(:,:,1),'edgecolor','none')
+surface(a2(:,:,2),'edgecolor','none')
 title('lambda2 = X0^T*Q*X0-d.^2/m')
 axis tight
 colorbar
@@ -113,27 +166,53 @@ colorbar
 
 figure
 subplot(421)
-surface(x,y,s1(:,:,1),'edgecolor','none')
-title('s1')
+surface(x,y,-s1(:,:,2),'edgecolor','none')
+title('-s1')
+colorbar
 subplot(422)
-surface(x,y,s1(:,:,1).^2-0.5*l1(:,:,1),'edgecolor','none')
+surface(x,y,-s1(:,:,2).^2+0.5*l1(:,:,2),'edgecolor','none')
 title('correction')
+colorbar
 subplot(423)
-surface(x,y,xi(:,:,1,1),'edgecolor','none')
+surface(x,y,xi(:,:,2,1),'edgecolor','none')
 title('xi\_x')
+colorbar
 subplot(424)
-surface(x,y,xi(:,:,1,2),'edgecolor','none')
+surface(x,y,xi(:,:,2,2),'edgecolor','none')
 title('xi\_y')
+colorbar
 subplot(425)
-surface(x,y,b(:,:,1,1,1),'edgecolor','none')
+surface(x,y,b(:,:,2,1,1),'edgecolor','none')
 title('B\_xx')
+colorbar
 subplot(426)
-surface(x,y,b(:,:,1,1,2),'edgecolor','none')
+surface(x,y,b(:,:,2,1,2),'edgecolor','none')
 title('B\_xy')
+colorbar
 subplot(427)
-surface(x,y,b(:,:,1,2,2),'edgecolor','none')
+surface(x,y,b(:,:,2,2,2),'edgecolor','none')
 title('B\_yy')
+colorbar
 subplot(428)
-surface(x,y,b(:,:,1,2,1),'edgecolor','none')
+surface(x,y,b(:,:,2,2,1),'edgecolor','none')
 title('B\_yx')
+colorbar
+%}
+
+figure
+subplot(221)
+surface(x,y,-s1(:,:,2),'edgecolor','none')
+title('-s_1')
+subplot(222)
+surface(x,y,-s1(:,:,2).^2+0.5.*l1(:,:,2),'edgecolor','none')
+title('correction')
+subplot(223)
+surface(x,y,xi(:,:,2,1),'edgecolor','none')
+title('Xi_x')
+subplot(224)
+surface(x,y,xi(:,:,2,2),'edgecolor','none')
+title('Xi_y')
+
+figure
+quiver(x(1:15:end,1:15:end),y(1:15:end,1:15:end),xi(1:15:end,1:15:end,2,1),xi(1:15:end,1:15:end,2,2))%,'edgecolor','none')
 

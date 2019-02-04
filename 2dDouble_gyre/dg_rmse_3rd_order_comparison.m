@@ -1,14 +1,19 @@
 close all
 clear all
 clc
-load sigma_big
-load error_comparison
+load dg_sigma_big_short
+%load dg_sigma_big
+load dg_error_comparison
 %
 
-s1 = s1(:,:,1);
-l1 = l1(:,:,1);
-a1 = a1(:,:,1);
-a2 = a2(:,:,1);
+s1 = s1(:,:,2);
+l1 = l1(:,:,2);
+a1 = a1(:,:,2);
+a2(abs(a2)>1e1)=nan;
+a2 = a2(:,:,2);
+sum(sum(~isnan(a2)))
+figure
+surface(a2)
 sigma(:,:,1)=-s1;
 T=time;
 n = length(T);
@@ -18,10 +23,11 @@ for i =1:n
     sig_approx = reshape(-s1-T(i)*(-s1.^2+0.5*l1+T(i)*(4/3*s1.^3-s1.*l1+0.25*a1)),[],1);
     sig_approx2 = reshape(-s1-T(i)*(-s1.^2+0.5*l1+T(i)*(4/3*s1.^3-s1.*l1+0.25*a2)),[],1);
     
-    ind = ~isnan(sig_true) & ~isnan(sig_approx) & ~isnan(sig_approx2);
+    ind = ~isnan(sig_true) & ~isnan(sig_approx) & ~isnan(sig_approx2) & ~isinf(sig_true) & ~isinf(sig_approx) & ~isinf(sig_approx2);
     sig_true = sig_true(ind);
     sig_approx = sig_approx(ind);
     rmsea1(i) = sqrt(mean((sig_approx-sig_true).^2));
+    
     sa_bar = mean(sig_approx);
     st_bar = mean(sig_true);
     n=length(sig_true);
@@ -113,4 +119,6 @@ set(gca, 'XScale', 'log')
 %}
 
 %save wrf_plot_data rmse_corrected rmse_uncorrected time
+%}
+%}
 %}

@@ -1,18 +1,19 @@
 close all
 clear all
 clc
-load FTLE_wrf
-load correction3rd
-s1 = s1(:,:,1);
-l1 = l1(:,:,1);
-l2 = l2(:,:,1);
+load dg_sigma_big_short
+load dg_correction3rd
+s1 = s1(:,:,2);
+l1 = l1(:,:,2);
+l2 = l2(:,:,2);
+l2(abs(l2)>1e1)=nan;
 sigma(:,:,1)=-s1;
-n = length(T);
+n = length(time);
 for i =1:n
     ftle_t = squeeze(sigma(:,:,i));
     sig_true = reshape(ftle_t,[],1);
     meanf = mean(sig_true);
-    sig_approx = reshape(-s1-T(i)*(-s1.^2+0.5*l1+T(i)*(4/3*s1.^3-s1.*l1+0.25*l2)),[],1);
+    sig_approx = reshape(-s1-time(i)*(-s1.^2+0.5*l1+time(i)*(4/3*s1.^3-s1.*l1+0.25*l2)),[],1);
     ind = ~isnan(sig_true) & ~isnan(sig_approx) ;
     sig_true = sig_true(ind);
     sig_approx = sig_approx(ind);
@@ -26,7 +27,7 @@ for i =1:n
     denominator = den1*den2;
     corr3(i) = numerator./denominator;
     
-    sig_approx = reshape(-s1-T(i)*(-s1.^2+0.5*l1),[],1);
+    sig_approx = reshape(-s1-time(i)*(-s1.^2+0.5*l1),[],1);
     sig_approx = sig_approx(ind);
     rmse2(i) = sqrt(mean((sig_approx-sig_true).^2));
     mean2(i) = mean(sig_approx);
@@ -66,26 +67,26 @@ cor_uncorrected=cor_uncorrected(start:stop);
 figure
 subplot(121)
 hold on
-plot(abs(T),rmse3,'k.-')
-plot(abs(T),rmse2,'b.-')
-plot(abs(T),rmse1,'r.-')
+plot(abs(time),rmse3,'k.-')
+plot(abs(time),rmse2,'b.-')
+plot(abs(time),rmse1,'r.-')
 legend('-s1-T*corr','-s1','Location','southeast')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
 subplot(122)
 hold on
-plot(abs(T),corr3,'k.-')
-plot(abs(T),corr2,'b.-')
-plot(abs(T),corr1,'r.-')
+plot(abs(time),corr3,'k.-')
+plot(abs(time),corr2,'b.-')
+plot(abs(time),corr1,'r.-')
 legend('-s1-T*cor','-s1','Location','southeast')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
 
 
 figure
-plot(abs(T),meanf,'k.-')
-plot(abs(T),mean2,'b.-')
-plot(abs(T),mean1,'r.-')
+plot(abs(time),meanf,'k.-')
+plot(abs(time),mean2,'b.-')
+plot(abs(time),mean1,'r.-')
 legend('FTLE','-s1-T*corr','-s1','Location','northeast')
 ylabel('s^{-1}')
 xlabel('|T| s')
@@ -96,9 +97,9 @@ title('means')
 figure
 subplot(121)
 hold on
-plot(abs(T),rmse3,'k.-')
-plot(abs(T),rmse2,'b.-')
-plot(abs(T),rmse1,'r.-')
+plot(abs(time),rmse3,'k.-')
+plot(abs(time),rmse2,'b.-')
+plot(abs(time),rmse1,'r.-')
 legend('-s1-T*corr','-s1','Location','southeast')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
@@ -106,9 +107,9 @@ set(gca, 'YScale', 'log')
 set(gca, 'XScale', 'log')
 subplot(122)
 hold on
-plot(abs(T),corr3,'k.-')
-plot(abs(T),corr2,'b.-')
-plot(abs(T),corr1,'r.-')
+plot(abs(time),corr3,'k.-')
+plot(abs(time),corr2,'b.-')
+plot(abs(time),corr1,'r.-')
 legend('-s1-T*cor','-s1','Location','southeast')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
@@ -116,4 +117,4 @@ set(gca, 'YScale', 'log')
 set(gca, 'XScale', 'log')
 %}
 
-%save wrf_plot_data rmse_corrected rmse_uncorrected time
+save dg_plot_data rmse1 rmse2 rmse3 time
