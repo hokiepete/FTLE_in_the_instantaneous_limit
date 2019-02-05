@@ -1,7 +1,7 @@
 close all
 clear all
 clc
-load dg_sigma_big_short
+load dg_sigma_big
 load dg_correction3rd
 s1 = s1(:,:,2);
 l1 = l1(:,:,2);

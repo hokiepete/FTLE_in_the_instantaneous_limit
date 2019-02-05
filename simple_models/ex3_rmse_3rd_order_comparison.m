@@ -10,6 +10,7 @@ l1 = l1(:,:,2);
 a1 = a1(:,:,2);
 a2 = a2(:,:,2);
 sigma(:,:,1)=-s1;
+
 T=time;
 n = length(T);
 for i =1:n
@@ -88,13 +89,13 @@ ylabel('RMSE s^{-1}')
 xlabel('|T| s')
 title('lambda2 = X0^T*Q*X0-d.^2/m')
 
-%{
+%
 figure
 subplot(121)
 hold on
-plot(abs(T),rmse3,'k.-')
-plot(abs(T),rmse2,'b.-')
 plot(abs(T),rmse1,'r.-')
+plot(abs(T),rmse2,'b.-')
+plot(abs(T),rmsea1,'k.-')
 legend('-s1-T*corr','-s1','Location','southeast')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
@@ -102,9 +103,9 @@ set(gca, 'YScale', 'log')
 set(gca, 'XScale', 'log')
 subplot(122)
 hold on
-plot(abs(T),corr3,'k.-')
-plot(abs(T),corr2,'b.-')
-plot(abs(T),corr1,'r.-')
+plot(abs(T),rmse1,'r.-')
+plot(abs(T),rmse2,'b.-')
+plot(abs(T),rmsea2,'k.-')
 legend('-s1-T*cor','-s1','Location','southeast')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')

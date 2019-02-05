@@ -1,32 +1,30 @@
 close all
 clear all
 clc
-load dg_sigma_big_ex_short
-%load dg_sigma_big_long
-load dg_error_comparison
+%load dg_sigma_big_short
+load dg_sigma_big
+load analytic_lambda_terms
 %
-
-s1 = s1(:,:,2);
-l1 = l1(:,:,2);
-a1 = a1(:,:,2);
-a2(abs(a2)>1e1)=nan;
-a2 = a2(:,:,2);
-sum(sum(~isnan(a2)))
+%
 figure
-surface(a2)
-sigma(:,:,1)=-s1;
+subplot(121)
+surface(-lambda_0,'edgecolor','none')
+colorbar
+subplot(122)
+surface(sigma(:,:,3),'edgecolor','none')
+colorbar
+sigma(:,:,1)=-lambda_0;
 T=time;
 n = length(T);
+
 for i =1:n
     ftle_t = squeeze(sigma(:,:,i));
     sig_true = reshape(ftle_t,[],1);
-    %sig_approx = reshape(-s1-T(i)*(-s1.^2+0.5*l1+T(i)*(4/3*s1.^3-s1.*l1+0.25*a1)),[],1);
-    %sig_approx2 = reshape(-s1-T(i)*(-s1.^2+0.5*l1+T(i)*(4/3*s1.^3-s1.*l1+0.25*a2)),[],1);
-    pt(i) = T(i);
-    pt2(i) = T(i).^2;
+    sig_approx = reshape(-lambda_0-T(i)*(-lambda_0.^2+0.5*lambda_1+T(i)*(4/3*lambda_0.^3-lambda_0.*lambda_1+0.25*lambda_2_first)),[],1);
+    sig_approx2 = reshape(-lambda_0-T(i)*(-lambda_0.^2+0.5*lambda_1+T(i)*(4/3*lambda_0.^3-lambda_0.*lambda_1+0.25*lambda_2_second)),[],1);
     
-    sig_approx = reshape(-s1-T(i)*(-s1.^2+0.5*l1)-T(i).^2*(4/3*s1.^3-s1.*l1+0.25*a1),[],1);
-    sig_approx2 = reshape(-s1-T(i)*(-s1.^2+0.5*l1)-T(i).^2*(4/3*s1.^3-s1.*l1+0.25*a2),[],1);
+    %sig_approx = reshape(-lambda_0-T(i)*(-lambda_0.^2+0.5*lambda_1)-T(i).^2*(4/3*lambda_0.^3-lambda_0.*lambda_1+0.25*lambda_2_first),[],1);
+    %sig_approx2 = reshape(-lambda_0-T(i)*(-lambda_0.^2+0.5*lambda_1)-T(i).^2*(4/3*lambda_0.^3-lambda_0.*lambda_1+0.25*lambda_2_second),[],1);
     
     
     ind = ~isnan(sig_true) & ~isnan(sig_approx) & ~isnan(sig_approx2) & ~isinf(sig_true) & ~isinf(sig_approx) & ~isinf(sig_approx2);
@@ -54,7 +52,7 @@ for i =1:n
     denominator = den1*den2;
     corra2(i) = numerator./denominator;
     
-    sig_approx = reshape(-s1-T(i)*(-s1.^2+0.5*l1),[],1);
+    sig_approx = reshape(-lambda_0-T(i)*(-lambda_0.^2+0.5*lambda_1),[],1);
     sig_approx = sig_approx(ind);
     rmse2(i) = sqrt(mean((sig_approx-sig_true).^2));
     sa_bar = mean(sig_approx);
@@ -65,7 +63,7 @@ for i =1:n
     denominator = den1*den2;
     corr2(i) = numerator./denominator;
     
-    sig_approx = reshape(-s1,[],1);
+    sig_approx = reshape(-lambda_0,[],1);
     sig_approx = sig_approx(ind);
     rmse1(i) = sqrt(mean((sig_approx-sig_true).^2));
     sa_bar = mean(sig_approx);
@@ -93,25 +91,27 @@ hold on
 plot(abs(T),rmse1,'r.-')
 plot(abs(T),rmse2,'b.-')
 plot(abs(T),rmsea1,'k.-')
+%{
 plot(abs(T),abs(T).^1,'r--')
-plot(abs(T),m2*abs(T).^2,'b--')
-plot(abs(T),m3*abs(T).^3,'k--')
-
+plot(abs(T),abs(T).^2,'b--')
+plot(abs(T),abs(T).^3,'k--')
 xlim([0.,0.5])
+%}
 legend('-s1','-s1-O(T)','-s1-O(T^2)','Location','northwest')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
 title('lambda2 = X0^T*Q*X0 + X0^T*B*X1 - X0^T*S*X1')
-
 subplot(122)
 hold on
 plot(abs(T),rmse1,'r.-')
 plot(abs(T),rmse2,'b.-')
 plot(abs(T),rmsea2,'k.-')
+%{
 plot(abs(T),abs(T).^1,'r--')
-plot(abs(T),m2*abs(T).^2,'b--')
-plot(abs(T),m3*abs(T).^3,'k--')
+plot(abs(T),abs(T).^2,'b--')
+plot(abs(T),abs(T).^3,'k--')
 xlim([0,0.5])
+%}
 legend('-s1','-s1-O(T)','-s1-O(T^2)','Location','northwest')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
@@ -124,7 +124,7 @@ hold on
 plot(abs(T),rmse1,'r.-')
 plot(abs(T),rmse2,'b.-')
 plot(abs(T),rmsea1,'k.-')
-legend('-s1-T*corr','-s1','Location','southeast')
+legend('-lambda_0-T*corr','-lambda_0','Location','southeast')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
 set(gca, 'YScale', 'log')
