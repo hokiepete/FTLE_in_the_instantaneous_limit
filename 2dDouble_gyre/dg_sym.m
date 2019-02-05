@@ -150,10 +150,6 @@ for i = 1:ydim
         end
         %lambda_2_first(i,j) = X0'*QQ*X0 + X0'*BB*X1 - X0'*SS*X1;
         lambda_2_first(i,j) = X0'*QQ*X0 + X0'*BB*X1 - lambda_1(i,j).*X0'*X1;
-        check(i,j) = X0'*QQ*X0;
-        heck(i,j) = X0'*BB*X1;
-        eck(i,j) = lambda_1(i,j).*X0'*X1;
-        ck(i,j) = X0'*SS*X1;
         
         %Second lambda_2 method bypassing Xi_1
         mu = X0'*R'*(SS-lambda_0(i,j)*eye(size(SS)))*R*X0;
