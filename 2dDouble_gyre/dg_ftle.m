@@ -1,11 +1,11 @@
 clear all
 close all
 clc
-lenx = 301
-lenyz = 151
+lenx = 31
+lenyz = 15
 tlen = 101
 t0 = 0
-tf = -0.01
+tf = -0.1
 x = linspace(0,2,lenx);
 dx=x(2)-x(1);
 y = linspace(0,1,lenyz);
@@ -46,4 +46,4 @@ for t = 1:tlen
 end
 size(sigma)
 time=twant;
-save('dg_sigma_big_ex_short.mat', 'sigma','time');
+save('dg_sigma_small_short.mat', 'sigma','time');

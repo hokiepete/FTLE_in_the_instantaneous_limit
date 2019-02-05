@@ -1,5 +1,5 @@
 close all
-%clear all
+clear all
 clc
 
 %{
@@ -111,16 +111,18 @@ grad_v = [dudx,dudy;dvdx,dvdy];
 grad_a = [daudx,daudy;davdx,davdy];
 grad_j = [djudx,djudy;djvdx,djvdy];
 
+%{
 grad_v = [dudx,dvdx;dudy,dvdy];
 grad_a = [daudx,davdx;daudy,davdy];
 grad_j = [djudx,djvdx;djudy,djvdy];
+%}
 
 S = 0.5*(grad_v+grad_v');
 B = 0.5*(grad_a+grad_a')+grad_v'*grad_v;
 Q = 0.5*(grad_j + grad_j')+(grad_v'*grad_a+grad_a'*grad_v);
 
-xdim = 31
-ydim =15
+xdim = 301
+ydim =151
 xx = linspace(0,2,xdim);
 yy = linspace(0,1,ydim);
 [xx,yy]=meshgrid(xx,yy);
