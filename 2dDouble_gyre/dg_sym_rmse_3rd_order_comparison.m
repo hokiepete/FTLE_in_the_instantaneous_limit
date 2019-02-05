@@ -2,8 +2,10 @@ close all
 clear all
 clc
 %load dg_sigma_big_short
-load dg_sigma_big
-load analytic_lambda_terms
+%load dg_sigma_big_short
+%load analytic_lambda_terms
+load dg_sigma_small_short
+load er_analytic_lambda_terms
 %
 %
 figure
@@ -11,7 +13,7 @@ subplot(121)
 surface(-lambda_0,'edgecolor','none')
 colorbar
 subplot(122)
-surface(sigma(:,:,3),'edgecolor','none')
+surface(sigma(:,:,2),'edgecolor','none')
 colorbar
 sigma(:,:,1)=-lambda_0;
 T=time;
