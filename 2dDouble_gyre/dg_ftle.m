@@ -48,4 +48,4 @@ for t = 1:tlen
     end
 end
 
-save('dg_sigma.mat', 'sigma','time');
+save('dg_sigma_small.mat', 'sigma','time');

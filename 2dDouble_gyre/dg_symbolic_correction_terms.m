@@ -59,14 +59,14 @@ grad_j = [djudx,djudy;djvdx,djvdy];
 %Rivlin-Ericksen tensors
 S = 0.5*(grad_v+grad_v');
 B = 0.5*(grad_a+grad_a')+grad_v'*grad_v;
-Q = 0.5*(grad_j + grad_j')+(grad_v'*grad_a+grad_a'*grad_v);
+Q = 1./3.*(grad_j + grad_j')+(grad_v'*grad_a+grad_a'*grad_v);
 
 %Rotation matrix
 R = [0,-1;1,0];
 
 %Compute Lambda terms for double gyre flow on domain [0 2]x[0 1]
-xdim = 301
-ydim =151
+xdim = 31
+ydim =15
 xx = linspace(0,2,xdim);
 yy = linspace(0,1,ydim);
 [xx,yy]=meshgrid(xx,yy);
@@ -86,12 +86,16 @@ for i = 1:ydim
         lambda_1(i,j) = X0'*BB*X0;
         
         %First lambda_2 method calculating Xi_1
-        X1 = -((BB - lambda_1(i,j)*eye(size(BB)))*X0) \ (SS - lambda_0(i,j)*eye(size(SS)));
+        %X1 = -((B-l1(i,j,t)*eye(size(B)))*X0)\(S-s1(i,j,t)*eye(size(B)));
+        X1 = pinv((SS-lambda_0(i,j)*eye(size(BB))))*(-(BB-lambda_1(i,j)*eye(size(BB)))*X0);
+        %X1=X1';
+        %{
         if sum(X1)~=0
             X1=X1'/norm(X1);
         else
             X1=X1';
         end
+        %}        
         %lambda_2_first(i,j) = X0'*QQ*X0 + X0'*BB*X1 - X0'*SS*X1;
         lambda_2_first(i,j) = X0'*QQ*X0 + X0'*BB*X1 - lambda_1(i,j).*X0'*X1;
         

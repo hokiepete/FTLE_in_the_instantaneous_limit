@@ -26,7 +26,7 @@ height=6
 #plt.figure(figsize=(5/3*height,height))
 plt.figure(figsize=(8,4))
 plt.plot(x,y,label='$-s_{1}$')
-plt.plot(x,z,label='$-s_{1}$-T*correction')
+#plt.plot(x,z,label='$-s_{1}$-T*correction')
 plt.legend(**labelfont)
 plt.ylabel('Correlation coefficient',**labelfont)
 plt.xlabel('Backward-time integration length',**labelfont)
@@ -34,7 +34,7 @@ plt.xlabel('Backward-time integration length',**labelfont)
 plt.axis('tight')
 plt.xticks([0,6,12,18,24],**tickfont)
 plt.yticks(**tickfont)
-plt.savefig('correlation_timeseries.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
+plt.savefig('correlation_timeseries_wrf.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
 plt.savefig('correlation_timeseries_wrf.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
 """
 dt = x[1]-x[0]

@@ -40,7 +40,7 @@ for t =1:tdim
                 %Tensors
                 S = 0.5*(Grad_v + Grad_v');
                 B = 0.5*(Grad_a + Grad_a')+(Grad_v'*Grad_v);
-                Q = 0.5*(Grad_j + Grad_j')+(Grad_v'*Grad_a+Grad_a'*Grad_v);
+                Q = 0.3*(Grad_j + Grad_j')+(Grad_v'*Grad_a+Grad_a'*Grad_v);
                 
                 %Calculate s1, lambda1, and lambda2 
                 [V,D] = eig(S);
@@ -53,18 +53,16 @@ for t =1:tdim
                 lambda_1(i,j,t) = X0'*B*X0;
                 
                 %First lambda_2 method calculating Xi_1
-                X1 = -((B - l1(i,j,t)*eye(size(B)))*X0) \ (S - s1(i,j,t)*eye(size(B)));
-                if sum(X1)~=0
-                    X1=X1'/norm(X1);
-                else
-                    X1=X1';
-                end
+                X1 = pinv((S - s1(i,j,t)*eye(size(B))))*(-((B - l1(i,j,t)*eye(size(B)))*X0));
+                
                 lambda_2_first(i,j,t) = X0'*Q*X0 + X0'*B*X1 - X0'*S*X1;
                 
                 %Second lambda_2 method bypassing Xi_1
                 mu = X0'*R'*(S-s1(i,j,t)*eye(size(S)))*R*X0;
                 d = X0'*R'*B*X0;
                 lambda_2_second(i,j,t) = X0'*Q*X0 - d.^2/m;
+               
+                
             else
                 s1(i,j,t) =nan;
                 lambda_1(i,j,t) = nan;

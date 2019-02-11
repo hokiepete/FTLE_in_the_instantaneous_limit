@@ -3,9 +3,9 @@ clear all
 clc
 %load dg_sigma_big_short
 %load dg_sigma_big_short
-%load analytic_lambda_terms
-load dg_sigma_small_short
-load er_analytic_lambda_terms
+load analytic_lambda_terms_mk2
+load dg_sigma_small
+%load er_analytic_lambda_terms
 %
 %
 figure
