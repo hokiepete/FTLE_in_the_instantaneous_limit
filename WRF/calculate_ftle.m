@@ -22,6 +22,7 @@ for t = 1:tlen
                 if ~isnan(dfxdx(i,j))&&~isnan(dfxdy(i,j))&&~isnan(dfydx(i,j))&&~isnan(dfydy(i,j))
                     gradF = [dfxdx(i,j),dfxdy(i,j);
                              dfydx(i,j),dfydy(i,j)];
+                    det(gradF)
                     C = gradF'*gradF;
                     lambda = max(eig(C));
                     sigma(i,j,t) = 1/(2*abs(T(t)))*log(lambda);

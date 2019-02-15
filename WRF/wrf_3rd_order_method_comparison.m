@@ -26,7 +26,7 @@ jv = davdt+u.*davdx+v.*davdy;
 clear daudt davdt u v au av
 [djudx,djudy,djudt] = gradient(ju,dx,dy,dt);
 [djvdx,djvdy,djvdt] = gradient(jv,dx,dy,dt);
-clear djudt djvdt
+clear djudt djvdt djudt djvdt
 R = [0,-1;1,0];
 b = zeros([ydim,xdim,tdim,2,2]);
 for t =1:3%tdim
@@ -87,7 +87,7 @@ for t =1:3%tdim
     end
 end
 
-save dg_correction3rd s1 l1 l2
+save wrf_correction3rd s1 l1 l2
 save error_comparison s1 l1 a1 a2 dd db mm xi b
 
 figure
