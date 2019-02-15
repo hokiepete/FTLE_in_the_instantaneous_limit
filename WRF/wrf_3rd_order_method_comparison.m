@@ -26,7 +26,7 @@ jv = davdt+u.*davdx+v.*davdy;
 clear daudt davdt u v au av
 [djudx,djudy,djudt] = gradient(ju,dx,dy,dt);
 [djvdx,djvdy,djvdt] = gradient(jv,dx,dy,dt);
-clear djudt djvdt
+clear djudt djvdt djudt djvdt
 R = [0,-1;1,0];
 b = zeros([ydim,xdim,tdim,2,2]);
 for t =1:3%tdim
@@ -70,7 +70,7 @@ for t =1:3%tdim
                 d = X0'*R'*B*X0;
                 dd(i,j,t)=d;
                 mm(i,j,t)=m;
-                l2(i,j,t) = X0'*Q*X0;%-d.^2/m;
+                l2(i,j,t) = X0'*Q*X0-d.^2/m;
                 a2(i,j,t)=l2(i,j,t);
                 %X1 = V(:,1);
                 %l1(i,j,t) = X1'*B*X1;
@@ -87,7 +87,7 @@ for t =1:3%tdim
     end
 end
 
-save dg_correction3rd s1 l1 l2
+save wrf_correction3rd s1 l1 l2
 save error_comparison s1 l1 a1 a2 dd db mm xi b
 
 figure

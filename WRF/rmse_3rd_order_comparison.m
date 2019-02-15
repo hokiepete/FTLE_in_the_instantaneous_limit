@@ -7,6 +7,14 @@ s1 = s1(:,:,1);
 l1 = l1(:,:,1);
 a1 = a1(:,:,1);
 a2 = a2(:,:,1);
+
+i=61;
+s1 = s1((i+1):end-i,(i+1):end-i,1);
+l1 = l1((i+1):end-i,(i+1):end-i,1);
+a1 = a1((i+1):end-i,(i+1):end-i,1);
+a2 = a2((i+1):end-i,(i+1):end-i,1);
+sigma = sigma((i+1):end-i,(i+1):end-i,:);
+
 sigma(:,:,1)=-s1;
 n = length(T);
 for i =1:n
@@ -110,5 +118,6 @@ set(gca, 'YScale', 'log')
 set(gca, 'XScale', 'log')
 axis('equal')
 %}
-
-%save wrf_plot_data rmse_corrected rmse_uncorrected time
+rmse3 = rmsea1;
+time = T;
+save wrf_plot_data rmse1 rmse2 rmse3 time

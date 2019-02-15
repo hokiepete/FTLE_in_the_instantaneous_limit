@@ -65,8 +65,8 @@ Q = 1./3.*(grad_j + grad_j')+(grad_v'*grad_a+grad_a'*grad_v);
 R = [0,-1;1,0];
 
 %Compute Lambda terms for double gyre flow on domain [0 2]x[0 1]
-xdim = 31
-ydim =15
+xdim = 301
+ydim =151
 xx = linspace(0,2,xdim);
 yy = linspace(0,1,ydim);
 [xx,yy]=meshgrid(xx,yy);

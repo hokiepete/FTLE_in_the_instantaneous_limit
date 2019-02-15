@@ -35,7 +35,7 @@ def add_subplot_axes(ax,rect,axisbg='w'):
 width = 4.5#5+3/8
 height = width/1.61803399
 figSize = (width,height)
-'''
+
 f = sio.loadmat('dg_plot_data.mat')
 t = -f['time'][0]
 rmse2 = f['rmse2'][0]
@@ -62,10 +62,10 @@ plt.savefig('dg_rmse.png', transparent=False, bbox_inches='tight',pad_inches=0.0
 
 
 f = sio.loadmat('wrf_plot_data.mat')
-t = f['T'][0]
-rmse2 = f['rmse2'][0]
-rmse1 = f['rmse1'][0]
-rmse3 = f['rmse3'][0]
+t = f['time'][0][0:-60]
+rmse2 = f['rmse2'][0][0:-60]
+rmse1 = f['rmse1'][0][0:-60]
+rmse3 = f['rmse3'][0][0:-60]
 
 fig = plt.figure(figsize=figSize)
 ax = fig.add_subplot(111)

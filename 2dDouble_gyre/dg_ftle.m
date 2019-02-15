@@ -3,11 +3,11 @@ close all
 clc
 
 %Set up the domain
-lenx = 31
-leny = 15
+lenx = 301
+leny = 151
 tlen = 101
 t0 = 0
-tf = -0.1
+tf = -1
 x = linspace(0,2,lenx);
 dx=x(2)-x(1);
 y = linspace(0,1,leny);
@@ -20,7 +20,7 @@ options = odeset('RelTol',1e-12,'AbsTol',1e-12);
 for i = 1:leny
     for j = 1:lenx
             y0=[x(i,j),y(i,j)];
-            [t,yout] = ode45(@dg_int,[t0,tf],y0,options);
+            [t,yout] = ode113(@dg_int,[t0,tf],y0,options);
             fx(i,j,:) = interp1(t,yout(:,1),time,'spline');
             fy(i,j,:) = interp1(t,yout(:,2),time,'spline');
     end
@@ -48,4 +48,4 @@ for t = 1:tlen
     end
 end
 
-save('dg_sigma_small.mat', 'sigma','time');
+save('dg_sigma.mat', 'sigma','time');
