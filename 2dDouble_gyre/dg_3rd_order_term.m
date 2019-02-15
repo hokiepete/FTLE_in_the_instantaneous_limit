@@ -61,7 +61,7 @@ for t =1:tdim
                 S = 0.5*(Grad_v + Grad_v');
                 B = 0.5*(Grad_a + Grad_a')+(Grad_v'*Grad_v);
                 b(i,j,t,:,:)=B;
-                Q = 0.5*(Grad_j + Grad_j')+(Grad_v'*Grad_a+Grad_a'*Grad_v);
+                Q = 1./3.*(Grad_j + Grad_j')+(Grad_v'*Grad_a+Grad_a'*Grad_v);
                 [V,D] = eig(S);
                 if ~issorted(diag(D))
                     [D,I] = sort(diag(D));
@@ -72,15 +72,9 @@ for t =1:tdim
                 xi(i,j,t,:) = V(:,1);
                 l1(i,j,t) = X0'*B*X0;
                 %
-                X1 = -((B-l1(i,j,t)*eye(size(B)))*X0)\(S-s1(i,j,t)*eye(size(B)));
-                if sum(X1)~=0
-                    X1=X1'/norm(X1);
-                else
-                    X1=X1';
-                end
-                %}
-                %X1 = -R*X0;
-                l2(i,j,t) = X0'*Q*X0 + X0'*B*X1 - X0'*S*X1;
+                X1 = pinv((S-s1(i,j,t)*eye(size(B))))*(-((B-l1(i,j,t)*eye(size(B)))*X0));
+                
+                l2(i,j,t) = X0'*Q*X0 + X0'*B*X1 - l1(i,j,t).*X0'*X1;
                 db(i,j,t) = X0'*B*X1 - X0'*S*X1;
                 a1(i,j,t)=l2(i,j,t);
                 %Xp = R*X0;

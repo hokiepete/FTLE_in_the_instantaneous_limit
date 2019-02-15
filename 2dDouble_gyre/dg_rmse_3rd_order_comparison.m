@@ -1,7 +1,7 @@
 close all
 clear all
 clc
-load dg_sigma_big_ex_short
+load dg_sigma%_big_ex_short
 %load dg_sigma_big_long
 load dg_error_comparison
 %

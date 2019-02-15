@@ -3,21 +3,25 @@ clear all
 clc
 %load dg_sigma_big_short
 %load dg_sigma_big_short
-load analytic_lambda_terms_mk2
-load dg_sigma_small
+load analytic_lambda_terms
+load dg_sigma
 %load er_analytic_lambda_terms
 %
-%
-figure
-subplot(121)
-surface(-lambda_0,'edgecolor','none')
-colorbar
-subplot(122)
-surface(sigma(:,:,2),'edgecolor','none')
-colorbar
 sigma(:,:,1)=-lambda_0;
 T=time;
 n = length(T);
+
+k = 3
+lambda_0 = lambda_0((k+1):end-k,(k+1):end-k);
+lambda_1 = lambda_1((k+1):end-k,(k+1):end-k);
+lambda_2_first = lambda_2_first((k+1):end-k,(k+1):end-k);
+lambda_2_second = lambda_2_second((k+1):end-k,(k+1):end-k);
+sigma = sigma((k+1):end-k,(k+1):end-k,:);
+
+figure
+surface(sigma(:,:,2)+lambda_0,'edgecolor','none')
+colorbar
+
 
 for i =1:n
     ftle_t = squeeze(sigma(:,:,i));
@@ -85,8 +89,7 @@ rmse2=rmse2(2:end);
 rmsea2=rmsea2(2:end);
 rmsea1=rmsea1(2:end);
 %}
-m2=1
-m3=1
+
 figure
 subplot(121)
 hold on
