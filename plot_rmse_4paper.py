@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib
 import scipy.io as sio
-
+import numpy as np
 matplotlib.rcParams['text.usetex']=True
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['lines.linewidth']=1
@@ -37,10 +37,11 @@ height = width/1.61803399
 figSize = (width,height)
 
 f = sio.loadmat('dg_plot_data.mat')
-t = -f['time'][0]
-rmse2 = f['rmse2'][0]
-rmse1 = f['rmse1'][0]
-rmse3 = f['rmse3'][0]
+end = 105
+t = -f['time'][0][0:end]
+rmse2 = f['rmse2'][0][0:end]
+rmse1 = f['rmse1'][0][0:end]
+rmse3 = f['rmse3'][0][0:end]
 
 fig = plt.figure(figsize=figSize)
 ax = fig.add_subplot(111)
@@ -51,16 +52,19 @@ ax.ticklabel_format(style='sci',axis='y', scilimits=(0,0))
 plt.ylabel('FTLE field root mean-squared error',**labelfont)
 plt.xlabel('$|T|$',**labelfont)
 plt.axis('tight')
+plt.ylim([0,0.175])
 ax1=add_subplot_axes(ax,rect = [0.09,0.54,0.37,0.37])
 #ax1.plot(t[0:-1],rmse1[0:1],'r-')
-ax1.plot(t[0:15],rmse2[0:15],'m-')
-ax1.plot(t[0:15],rmse3[0:15],'k-')
+
+ax1.plot(t[0:5],rmse2[0:5],'m-')
+ax1.plot(t[0:5],rmse3[0:5],'k-')
+
 ax1.ticklabel_format(style='sci',axis='y', scilimits=(0,0))
 #plt.xlim([0,0.02])
 plt.savefig('dg_rmse.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
 plt.savefig('dg_rmse.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
 
-
+'''
 f = sio.loadmat('wrf_plot_data.mat')
 t = f['time'][0][0:-60]
 rmse2 = f['rmse2'][0][0:-60]
@@ -85,7 +89,7 @@ ax1.ticklabel_format(style='sci',axis='y', scilimits=(0,0))
 #plt.xlim([0,400])
 plt.savefig('wrf_rmse.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
 plt.savefig('wrf_rmse.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
-
+#'''
 '''
 f = sio.loadmat('dg3d_plot_data.mat')
 t = f['time'][0]

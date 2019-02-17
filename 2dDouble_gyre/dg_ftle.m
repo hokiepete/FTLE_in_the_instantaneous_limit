@@ -5,9 +5,9 @@ clc
 %Set up the domain
 lenx = 301
 leny = 151
-tlen = 101
+tlen = 121
 t0 = 0
-tf = -1
+tf = -0.8
 x = linspace(0,2,lenx);
 dx=x(2)-x(1);
 y = linspace(0,1,leny);

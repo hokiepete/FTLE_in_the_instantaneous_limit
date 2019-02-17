@@ -153,8 +153,9 @@ axis equal
 set(gca, 'YScale', 'log')
 set(gca, 'XScale', 'log')
 %}
-
-%save wrf_plot_data rmse_corrected rmse_uncorrected time
+rmse3=rmsea2;
+time = T;
+save dg_plot_data rmse1 rmse2 rmse3 time
 %}
 %}
 %}
