@@ -78,4 +78,4 @@ divider = make_axes_locatable(ax2)
 cax = divider.append_axes('right', size='5%', pad=0.05)
 cbar=plt.colorbar(cs, cax=cax, orientation='vertical',format="%.2f");
 
-plt.savefig('s1_vs_s2_v2.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
+plt.savefig('s1_vs_s2_v2.png', transparent=False, bbox_inches='tight',pad_inches=0.03,dpi=300)
