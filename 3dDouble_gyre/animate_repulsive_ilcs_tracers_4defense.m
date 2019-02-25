@@ -7,7 +7,7 @@ v = VideoWriter(filename,'MPEG-4');
 
 %filename='repelling_ilcs.avi'
 %v = VideoWriter(filename,'Uncompressed AVI');
-v.FrameRate=10;
+v.FrameRate=60;
 opengl('software')
 open(v)
 load OECS_DATA
@@ -37,7 +37,7 @@ lims = [0,0,0;
         2,1,0
 ];
 %2,1,1
-n=31;
+n=181;
 tend=1.25
 twant = linspace(0,tend,n);
 for i = 1:length(x1)
