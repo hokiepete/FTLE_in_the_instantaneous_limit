@@ -100,28 +100,29 @@ end
 verts = cat(3,xvert,yvert,zvert);
 %
 fig=figure
-for i =1:n
-    clf
-    hold on
-    FV.vertices=squeeze(verts(i,:,:));
-    patch(FV,'facecolor','blue','edgecolor','none','FaceAlpha',0.4);
-    scatter3(lims(:,1),lims(:,2),lims(:,3),1,'w.');
-    %scatter3(xx1(i,:),yy1(i,:),zz1(i,:),'g.');
-    dt1 = delaunayTriangulation(xx1(i,:)',yy1(i,:)',zz1(i,:)');
-    triboundary1 = convexHull(dt1);
-    trisurf(triboundary1,xx1(i,:)',yy1(i,:)',zz1(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',1.0);
-    xlabel('x')
-    ylabel('y')
-    zlabel('z')
-    title(sprintf('time = %1.2f',twant(i)))
-    camlight
-    lighting gouraud
-    axis equal tight
-    view(3)
-    g=getframe(fig);
-    writeVideo(v,g)
+for loop = 1:10
+    for i =1:n
+        clf
+        hold on
+        FV.vertices=squeeze(verts(i,:,:));
+        patch(FV,'facecolor','blue','edgecolor','none','FaceAlpha',0.4);
+        scatter3(lims(:,1),lims(:,2),lims(:,3),1,'w.');
+        %scatter3(xx1(i,:),yy1(i,:),zz1(i,:),'g.');
+        dt1 = delaunayTriangulation(xx1(i,:)',yy1(i,:)',zz1(i,:)');
+        triboundary1 = convexHull(dt1);
+        trisurf(triboundary1,xx1(i,:)',yy1(i,:)',zz1(i,:)','FaceColor', 'green','edgecolor','none','FaceAlpha',1.0);
+        xlabel('x')
+        ylabel('y')
+        zlabel('z')
+        title(sprintf('time = %1.2f',twant(i)))
+        camlight
+        lighting gouraud
+        axis equal tight
+        view(3)
+        g=getframe(fig);
+        writeVideo(v,g)
+    end
 end
-
 close(v)
 %{
 az2 = 120%28%47

@@ -1,7 +1,7 @@
 close all
 clear all
 clc
-load flow_map_gridint_v2
+load flow_map_gridint_v2_long
 
 dx = xx(1,2)- xx(1,1)
 dy = yy(2,1)- yy(1,1)
@@ -22,7 +22,6 @@ for t = 1:tlen
                 if ~isnan(dfxdx(i,j))&&~isnan(dfxdy(i,j))&&~isnan(dfydx(i,j))&&~isnan(dfydy(i,j))
                     gradF = [dfxdx(i,j),dfxdy(i,j);
                              dfydx(i,j),dfydy(i,j)];
-                    det(gradF)
                     C = gradF'*gradF;
                     lambda = max(eig(C));
                     sigma(i,j,t) = 1/(2*abs(T(t)))*log(lambda);
@@ -34,4 +33,4 @@ for t = 1:tlen
     end
 end
 
-save('FTLE_wrf.mat', 'sigma', 'T');
+save('FTLE_wrf_long.mat', 'sigma', 'T');

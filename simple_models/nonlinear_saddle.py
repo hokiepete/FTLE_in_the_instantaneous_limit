@@ -5,45 +5,21 @@ Created on Tue Jan 15 22:20:26 2019
 @author: pnola
 """
 
-from numpy import n
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.rcParams['text.usetex']=True
+matplotlib.rcParams['mathtext.fontset'] = 'cm'
+plt.rc('font', **{'family': 'serif', 'serif': ['cmr10']})
+titlefont = {'fontsize':12}
+labelfont = {'fontsize':10}
+tickfont = {'fontsize':8}
 
-y=0:0.01:0.5;
-y=y(:);
-
-k=0;
-for T=0.01:0.01:0.8,
-k=k+1;
-T=-T;
-sig_0 = (1+3*y.^2);
-sig_true=-(1/(2*T)*log(exp(4*T)./((1+y.^2)*exp(2*T) - y.^2).^3));
-err(k)=immse(sig_true,sig_0);
-rho(k)=corr(sig_true,sig_0);
-t(k)=T;
-end
-
-k=0;
-for T=0.01:0.01:0.8,
-k=k+1;
-T=-T;
-sig_0 = (1+3*y.^2);
-sig_1 = -3*T*y.^2.*(1+3*y.^2);
-sig_true=-(1/(2*T)*log(exp(4*T)./((1+y.^2)*exp(2*T) - y.^2).^3));
-err2(k)=immse(sig_true,sig_0+sig_1);
-rho2(k)=corr(sig_true,sig_0+sig_1);
-t(k)=T;
-end
-
-plot(-t,rho2,'m')
-hold on
-plot(-t,rho)
-figure
-plot(-t,err)
-hold on
-plot(-t,err2,'m')
-figure(2);
-xlabel('|T|');
-ylabel('Mean-squared error');
-
-figure(1)
-xlabel('|T|');
-ylabel('Pearson correlation coefficient');
+dim =7
+bd =0.5
+x = np.linspace(-bd,bd,dim)
+x,y = np.meshgrid(x,x)
+plt.close('all')
+plt.quiver(x,y,x,-y-y**3)
+plt.axis('equal')
+plt.savefig('nl_saddle.eps', transparent=False, bbox_inches='tight')

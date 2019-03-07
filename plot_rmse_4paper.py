@@ -35,7 +35,7 @@ def add_subplot_axes(ax,rect,axisbg='w'):
 width = 4.5#5+3/8
 height = width/1.61803399
 figSize = (width,height)
-
+'''
 f = sio.loadmat('dg_plot_data.mat')
 end = 105
 t = -f['time'][0][0:end]
@@ -66,29 +66,32 @@ plt.savefig('dg_rmse.png', transparent=False, bbox_inches='tight',pad_inches=0.0
 
 '''
 f = sio.loadmat('wrf_plot_data.mat')
-t = f['time'][0][0:-60]
-rmse2 = f['rmse2'][0][0:-60]
-rmse1 = f['rmse1'][0][0:-60]
-rmse3 = f['rmse3'][0][0:-60]
+t = f['time'][0]
+#rmse2 = f['rmse2'][0][0:-60]
+#rmse1 = f['rmse1'][0][0:-60]
+rmse1 = f['corr1'][0]
+#rmse3 = f['rmse3'][0][0:-60]
 
 fig = plt.figure(figsize=figSize)
 ax = fig.add_subplot(111)
-ax.plot(-t,rmse1,'b-')
-ax.plot(-t,rmse2,'m-')
-ax.plot(-t,rmse3,'k-')
+ax.plot(t,rmse1,'b-')
+#ax.plot(-t,rmse2,'m-')
+#ax.plot(-t,rmse3,'k-')
 ax.ticklabel_format(style='sci',axis='y', scilimits=(0,0))
-plt.ylabel('FTLE field root mean-squared error',**labelfont)
+#plt.ylabel('FTLE field root mean-squared error',**labelfont)
+plt.ylabel('Pearson correlation coefficient',**labelfont)
 plt.xlabel('$|T|$',**labelfont)
 plt.axis('tight')
+"""
 ax1=add_subplot_axes(ax,rect = [0.09,0.54,0.37,0.37])
 #ax1.plot(t[0:-1],rmse1[0:1],'r-')
 ax1.plot(-t[0:10],rmse2[0:10],'m-')
 ax1.plot(-t[0:10],rmse3[0:10],'k-')
 ax1.ticklabel_format(style='sci',axis='y', scilimits=(0,0))
-
+"""
 #plt.xlim([0,400])
-plt.savefig('wrf_rmse.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
 plt.savefig('wrf_rmse.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
+plt.savefig('wrf_rmse.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
 #'''
 '''
 f = sio.loadmat('dg3d_plot_data.mat')
