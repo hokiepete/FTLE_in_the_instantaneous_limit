@@ -1,7 +1,7 @@
 close all
 clear all
 clc
-load dg_sigma%_big_ex_short
+load dg_sigma_shorttime%_big_ex_short
 %load dg_sigma_big_long
 load dg_error_comparison
 %
@@ -155,7 +155,7 @@ set(gca, 'XScale', 'log')
 %}
 rmse3=rmsea2;
 time = T;
-save dg_plot_data rmse1 rmse2 rmse3 time
+save dg_plot_data_shortime rmse1 rmse2 rmse3 time
 %}
 %}
 %}

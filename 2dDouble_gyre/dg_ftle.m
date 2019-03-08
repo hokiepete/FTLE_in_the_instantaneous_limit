@@ -5,9 +5,9 @@ clc
 %Set up the domain
 lenx = 301
 leny = 151
-tlen = 121
+tlen = 21
 t0 = 0
-tf = -0.8
+tf = -0.03
 x = linspace(0,2,lenx);
 dx=x(2)-x(1);
 y = linspace(0,1,leny);
@@ -48,4 +48,4 @@ for t = 1:tlen
     end
 end
 
-save('dg_sigma.mat', 'sigma','time');
+save('dg_sigma_shorttime.mat', 'sigma','time');
