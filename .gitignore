@@ -19,3 +19,6 @@ dg_eulerian_data.npz
 *.npz
 ftle_80m_old.nc
 ftle_80m_small.nc
+MV/windage_ftle.nc
+MV/windagedata.nc
+MV/mv_ftle.nc
