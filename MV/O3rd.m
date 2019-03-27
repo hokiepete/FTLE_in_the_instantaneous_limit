@@ -29,8 +29,8 @@ clear daudt davdt u v au av
 [djvdx,djvdy,djvdt] = gradient(jv,dx,dy,dt);
 clear djudt djvdt
 R = [0,-1;1,0];
-
-for t =1:25%tdim
+b = zeros([ydim,xdim,tdim,2,2]);
+for t =1:tdim
     t
     for i = 1:ydim
         for j = 1:xdim
@@ -40,7 +40,8 @@ for t =1:25%tdim
                 Grad_j = [djudx(i,j,t), djudy(i,j,t); djvdx(i,j,t), djvdy(i,j,t)];
                 S = 0.5*(Grad_v + Grad_v');
                 B = 0.5*(Grad_a + Grad_a')+(Grad_v'*Grad_v);
-                Q = 0.5*(Grad_j + Grad_j')+(Grad_v'*Grad_a+Grad_a'*Grad_v);
+                b(i,j,t,:,:)=B;
+                Q = 1./3.*(Grad_j + Grad_j')+(Grad_v'*Grad_a+Grad_a'*Grad_v);
                 [V,D] = eig(S);
                 if ~issorted(diag(D))
                     [D,I] = sort(diag(D));
@@ -48,37 +49,38 @@ for t =1:25%tdim
                 end
                 s1(i,j,t) = D(1,1);
                 X0 = V(:,1);
+                xi(i,j,t,:) = V(:,1);
                 l1(i,j,t) = X0'*B*X0;
-                X1 = -((B-l1(i,j,t)*eye(size(B)))*X0)\(S-s1(i,j,t)*eye(size(B)));
-                X1=X1'/norm(X1);
-                l2(i,j,t) = X0'*Q*X0 + X0'*B*X1 - X0'*S*X1;
+                %
+                X1 = pinv((S-s1(i,j,t)*eye(size(B))))*(-((B-l1(i,j,t)*eye(size(B)))*X0));
+                
+                l2(i,j,t) = X0'*Q*X0 + X0'*B*X1 - l1(i,j,t).*X0'*X1;
+                db(i,j,t) = X0'*B*X1 - X0'*S*X1;
                 a1(i,j,t)=l2(i,j,t);
                 %Xp = R*X0;
                 m = X0'*R'*(S-s1(i,j,t)*eye(size(S)))*R*X0;
                 d = X0'*R'*B*X0;
-                l2(i,j,t) = X0'*Q*X0-d.^2/m;
+                dd(i,j,t)=d;
+                mm(i,j,t)=m;
+                l2(i,j,t) = X0'*Q*X0-d.^2/m;%m/(X0'*Q*X0*m-d.^2);%X0'*Q*X0-d.^2/m;
                 a2(i,j,t)=l2(i,j,t);
                 %X1 = V(:,1);
                 %l1(i,j,t) = X1'*B*X1;
                 %l2(i,j,t) = X1'*Q*X1;
                 %cor(i,j,t) = -s1(i,j,t).^2+0.5*(X1'*B*X1);
-                a3(i,j,t) = norm(Q);
-                a3(i,j,t) = norm(B);
 
             else
                 s1(i,j,t) =nan;
                 l1(i,j,t) = nan;
                 l2(i,j,t) = nan;
-                a1(i,j,t) = nan;
-                a2(i,j,t) = nan;
                 %cor(i,j,t)=nan;
             end
         end
     end
 end
 
-%save correction3rd s1 l1 l2
-save error_comparison_terms s1 l1 a1 a2
+save error_comparison_terms s1 l1 l2
+save error_comparison_terms s1 l1 a1 a2 dd db
 
 figure
 subplot(121)
