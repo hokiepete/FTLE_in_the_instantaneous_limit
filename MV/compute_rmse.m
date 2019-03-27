@@ -85,9 +85,10 @@ title('lambda2 = X0^T*Q*X0 + X0^T*B*X1 - X0^T*S*X1')
 
 subplot(122)
 hold on
-plot(-T,rmse1,'r.-')
+%plot(-T,rmse1,'r.-')
 plot(-T,rmse2,'b.-')
 plot(-T,rmsea2,'k.-')
+xlim([0,250])
 legend('-s1','-s1-O(T)','-s1-O(T^2)','Location','northwest')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
@@ -99,7 +100,7 @@ subplot(121)
 hold on
 plot(-T,rmse1,'r.-')
 plot(-T,rmse2,'b.-')
-%plot(T,rmsea1,'k.-')
+plot(T,rmsea1,'k.-')
 legend('-s1-T*corr','-s1','Location','southeast')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
@@ -108,9 +109,9 @@ set(gca, 'XScale', 'log')
 axis('equal')
 subplot(122)
 hold on
-plot(-T,rmse1,'r.-')
+%plot(-T,rmse1,'r.-')
 plot(-T,rmse2,'b.-')
-%plot(T,rmsea2,'k.-')
+plot(T,rmsea2,'k.-')
 legend('-s1-T*cor','-s1','Location','southeast')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
@@ -118,7 +119,7 @@ set(gca, 'YScale', 'log')
 set(gca, 'XScale', 'log')
 axis('equal')
 %}
-rmse3 = rmsea1;
+rmse3 = rmsea2;
 time = T;
 save wrf_plot_data rmse1 rmse2 rmse3 time
 
