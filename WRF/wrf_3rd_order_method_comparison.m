@@ -30,7 +30,6 @@ clear djudt djvdt djudt djvdt
 R = [0,-1;1,0];
 b = zeros([ydim,xdim,tdim,2,2]);
 for t =1:3%tdim
-    t
     for i = 1:ydim
         for j = 1:xdim
             if ~isnan(ju(i,j,t))&&~isnan(jv(i,j,t))
@@ -86,7 +85,6 @@ for t =1:3%tdim
         end
     end
 end
-
 save wrf_correction3rd s1 l1 l2
 save error_comparison s1 l1 a1 a2 dd db mm xi b
 

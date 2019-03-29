@@ -1,7 +1,7 @@
 close all
 clear all
 clc
-load FTLE_wrf_long
+load FTLE_wrf_short
 load error_comparison
 s1 = s1(:,:,1);
 l1 = l1(:,:,1);
@@ -15,9 +15,10 @@ a1 = a1((i+1):end-i,(i+1):end-i,1);
 a2 = a2((i+1):end-i,(i+1):end-i,1);
 sigma = sigma((i+1):end-i,(i+1):end-i,:);
 
-sigma(:,:,end)=-s1;
+sigma(:,:,1)=-s1;
 n_t = length(T);
 for i =1:n_t
+    i
     ftle_t = squeeze(sigma(:,:,n_t-i+1));
     sig_true = reshape(ftle_t,[],1);
     sig_approx = reshape(-s1-T(i)*(-s1.^2+0.5*l1+T(i)*(4/3*s1.^3-s1.*l1+0.25*a1)),[],1);

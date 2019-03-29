@@ -46,7 +46,10 @@ clc
 load wrf_vel_data
 xwant = 405
 ywant= 325
-t_want = linspace(24*3600,22*3600,121);
+t0 = 13*3600;
+tf = 11*3600;
+
+t_want = linspace(t0,tf,3);
 yy=linspace(0,972000,ywant);
 xx=linspace(0,1212000,xwant);
 P = [2,1,3];

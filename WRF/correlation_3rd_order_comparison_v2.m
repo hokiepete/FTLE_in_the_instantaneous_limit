@@ -1,23 +1,24 @@
 close all
 clear all
 clc
-
-load error_comparison_terms
-
-load FTLE_mv_short
-%time_ftle = T
-[ydim,xdim,tdim]=size(sigma)
-j = 13
-s1 = s1(:,:,j);
-l1 = l1(:,:,j);
-a1 = a1(:,:,j);
-a2 = a2(:,:,j);
-
+load FTLE_wrf_short
+load error_comparison
+s1 = s1(:,:,1);
+l1 = l1(:,:,1);
+a1 = a1(:,:,1);
+a2 = a2(:,:,1);
+T
+i=0;
+s1 = s1((i+1):end-i,(i+1):end-i,1);
+l1 = l1((i+1):end-i,(i+1):end-i,1);
+a1 = a1((i+1):end-i,(i+1):end-i,1);
+a2 = a2((i+1):end-i,(i+1):end-i,1);
+sigma = sigma((i+1):end-i,(i+1):end-i,:);
 
 sigma(:,:,1)=-s1;
-n = length(T);%time_ftle);
-for i =1:n
-    %T = time_ftle(end-i+1);
+n_t = length(T);
+for i =1:n_t
+    i
     ftle_t = squeeze(sigma(:,:,i));
     sig_true = reshape(ftle_t,[],1);
     sig_approx = reshape(-s1-T(i)*(-s1.^2+0.5*l1+T(i)*(4/3*s1.^3-s1.*l1+0.25*a1)),[],1);
@@ -71,13 +72,13 @@ for i =1:n
 
    
 end
-
+T=T/3600;
 figure
 subplot(121)
 hold on
-plot(-T,rmse1,'r.-')
-plot(-T,rmse2,'b.-')
-plot(-T,rmsea1,'k.-')
+plot(abs(T),corr1,'r.-')
+plot(abs(T),corr2,'b.-')
+plot(abs(T),corra1,'k.-')
 legend('-s1','-s1-O(T)','-s1-O(T^2)','Location','northwest')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
@@ -85,10 +86,9 @@ title('lambda2 = X0^T*Q*X0 + X0^T*B*X1 - X0^T*S*X1')
 
 subplot(122)
 hold on
-plot(-T,rmse1,'r.-')
-plot(-T,rmse2,'b.-')
-plot(-T,rmsea2,'k.-')
-%xlim([0,250])
+plot(abs(T),corr1,'r.-')
+plot(abs(T),corr2,'b.-')
+plot(abs(T),corra2,'k.-')
 legend('-s1','-s1-O(T)','-s1-O(T^2)','Location','northwest')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
@@ -98,9 +98,9 @@ title('lambda2 = X0^T*Q*X0-d.^2/m')
 figure
 subplot(121)
 hold on
-plot(-T,rmse1,'r.-')
-plot(-T,rmse2,'b.-')
-plot(T,rmsea1,'k.-')
+plot(abs(T),corr1,'r.-')
+plot(abs(T),corr2,'b.-')
+plot(abs(T),corra1,'k.-')
 legend('-s1-T*corr','-s1','Location','southeast')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
@@ -109,9 +109,9 @@ set(gca, 'XScale', 'log')
 axis('equal')
 subplot(122)
 hold on
-%plot(-T,rmse1,'r.-')
-plot(-T,rmse2,'b.-')
-plot(T,rmsea2,'k.-')
+plot(abs(T),corr1,'r.-')
+plot(abs(T),corr2,'b.-')
+plot(abs(T),corra2,'k.-')
 legend('-s1-T*cor','-s1','Location','southeast')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
@@ -119,8 +119,6 @@ set(gca, 'YScale', 'log')
 set(gca, 'XScale', 'log')
 axis('equal')
 %}
-rmse3 = rmsea2;
+corr3 = corra1;
 time = T;
-save wrf_plot_data rmse1 rmse2 rmse3 time
-
-
+save wrf_plot_corr_data corr1 corr2 corr3 time

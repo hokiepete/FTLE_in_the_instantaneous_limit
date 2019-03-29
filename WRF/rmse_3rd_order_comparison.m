@@ -1,14 +1,14 @@
 close all
 clear all
 clc
-load FTLE_wrf
+load FTLE_wrf_short
 load error_comparison
-s1 = s1(:,:,1);
-l1 = l1(:,:,1);
-a1 = a1(:,:,1);
-a2 = a2(:,:,1);
+s1 = s1(:,:,2);
+l1 = l1(:,:,2);
+a1 = a1(:,:,2);
+a2 = a2(:,:,2);
 
-i=61;
+i=0;%61;
 s1 = s1((i+1):end-i,(i+1):end-i,1);
 l1 = l1((i+1):end-i,(i+1):end-i,1);
 a1 = a1((i+1):end-i,(i+1):end-i,1);
