@@ -30,6 +30,10 @@ clear daudt davdt u v au av
 clear djudt djvdt
 R = [0,-1;1,0];
 b = zeros([ydim,xdim,tdim,2,2]);
+%s1 = zeros([ydim,xdim,tdim]);
+%l1 = zeros([ydim,xdim,tdim]);
+%a1 = zeros([ydim,xdim,tdim]);
+%a2 = zeros([ydim,xdim,tdim]);
 for t =1:tdim
     t
     for i = 1:ydim
@@ -55,15 +59,17 @@ for t =1:tdim
                 X1 = pinv((S-s1(i,j,t)*eye(size(B))))*(-((B-l1(i,j,t)*eye(size(B)))*X0));
                 
                 l2(i,j,t) = X0'*Q*X0 + X0'*B*X1 - l1(i,j,t).*X0'*X1;
+                a1(i,j,t) = X0'*Q*X0 + X0'*B*X1 - l1(i,j,t).*X0'*X1;
                 db(i,j,t) = X0'*B*X1 - X0'*S*X1;
-                a1(i,j,t)=l2(i,j,t);
+                %a1(i,j,t)=l2(i,j,t);
                 %Xp = R*X0;
                 m = X0'*R'*(S-s1(i,j,t)*eye(size(S)))*R*X0;
                 d = X0'*R'*B*X0;
                 dd(i,j,t)=d;
                 mm(i,j,t)=m;
                 l2(i,j,t) = X0'*Q*X0-d.^2/m;%m/(X0'*Q*X0*m-d.^2);%X0'*Q*X0-d.^2/m;
-                a2(i,j,t)=l2(i,j,t);
+                a2(i,j,t) = X0'*Q*X0-d.^2/m;%m/(X0'*Q*X0*m-d.^2);%X0'*Q*X0-d.^2/m;
+                %a2(i,j,t)=l2(i,j,t);
                 %X1 = V(:,1);
                 %l1(i,j,t) = X1'*B*X1;
                 %l2(i,j,t) = X1'*Q*X1;
@@ -73,6 +79,8 @@ for t =1:tdim
                 s1(i,j,t) =nan;
                 l1(i,j,t) = nan;
                 l2(i,j,t) = nan;
+                a1(i,j,t) = nan;
+                a2(i,j,t) = nan;
                 %cor(i,j,t)=nan;
             end
         end

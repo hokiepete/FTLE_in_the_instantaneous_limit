@@ -8,7 +8,7 @@ l1 = l1(:,:,2);
 a1 = a1(:,:,2);
 a2 = a2(:,:,2);
 
-i=0;%61;
+i=0;
 s1 = s1((i+1):end-i,(i+1):end-i,1);
 l1 = l1((i+1):end-i,(i+1):end-i,1);
 a1 = a1((i+1):end-i,(i+1):end-i,1);
@@ -75,12 +75,13 @@ end
 figure
 subplot(121)
 hold on
-plot(abs(T),rmse1,'r.-')
+%plot(abs(T),rmse1,'r.-')
 plot(abs(T),rmse2,'b.-')
 plot(abs(T),rmsea1,'k.-')
 legend('-s1','-s1-O(T)','-s1-O(T^2)','Location','northwest')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
+xlim([0, 300])
 title('lambda2 = X0^T*Q*X0 + X0^T*B*X1 - X0^T*S*X1')
 
 subplot(122)

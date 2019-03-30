@@ -13,6 +13,12 @@ l1 = l1(:,:,j);
 a1 = a1(:,:,j);
 a2 = a2(:,:,j);
 
+i=0;
+s1 = s1((i+1):end-i,(i+1):end-i,1);
+l1 = l1((i+1):end-i,(i+1):end-i,1);
+a1 = a1((i+1):end-i,(i+1):end-i,1);
+a2 = a2((i+1):end-i,(i+1):end-i,1);
+sigma = sigma((i+1):end-i,(i+1):end-i,:);
 
 sigma(:,:,1)=-s1;
 n = length(T);%time_ftle);
