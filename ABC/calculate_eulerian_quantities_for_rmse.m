@@ -100,6 +100,9 @@ end
 
 save abc_correction3rd s1 l1 l2
 save abc_error_comparison s1 l1 a1 twant%a2% dd db
+figure
+vol3d_v2('cdata',a1)
+
 %{
 figure
 subplot(421)
