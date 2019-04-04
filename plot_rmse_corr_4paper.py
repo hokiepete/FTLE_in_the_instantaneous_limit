@@ -157,6 +157,7 @@ plt.xlabel('$|T|$',**labelfont)
 plt.axis('tight')
 plt.ylim([0,0.175])
 ax1=add_subplot_axes(ax,rect = [0.09,0.54,0.37,0.37])
+'''
 f = sio.loadmat('dg3d_plot_data_shortime.mat')
 t = -f['time'][0]
 rmse2 = f['rmse2'][0]
@@ -165,24 +166,27 @@ rmse3 = f['rmse3'][0]
 #ax1.plot(t[0:-1],rmse1[0:1],'r-')
 ax1.plot(t,rmse2,'m-')
 ax1.plot(t,rmse3,'k-')
-
+'''
 ax1.ticklabel_format(style='sci',axis='y', scilimits=(0,0))
 plt.savefig('dg_rmse.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
 plt.savefig('dg_rmse.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
 #'''
-'''
-f = sio.loadmat('abc_plot_data.mat')
+
+f = sio.loadmat('abc_plot_data_big.mat')
 t = f['time'][0]
-rmse2 = f['rmse_corrected'][0]
-rmse1 = f['rmse_uncorrected'][0]
+rmse3 = f['rmse3'][0]
+rmse2 = f['rmse2'][0]
+rmse1 = f['rmse1'][0]
 
 plt.figure(figsize=figSize)
-plt.plot(t,rmse1,'b-')
-plt.plot(t,rmse2,'m-')
+plt.plot(-t,rmse1,'b-')
+plt.plot(-t,rmse2,'m-')
+#plt.plot(-t,rmse3,'k-')
 plt.ylabel('FTLE field root mean-squared error',**labelfont)
 plt.xlabel('$|T|$',**labelfont)
 plt.axis('tight')
-plt.xlim([0,0.7])
+#plt.xlim([0,0.7])
+plt.savefig('abc_rmse.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
 plt.savefig('abc_rmse.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
 
 del f

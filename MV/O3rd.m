@@ -30,9 +30,9 @@ clear daudt davdt u v au av
 clear djudt djvdt
 R = [0,-1;1,0];
 b = zeros([ydim,xdim,tdim,2,2]);
-%s1 = zeros([ydim,xdim,tdim]);
-%l1 = zeros([ydim,xdim,tdim]);
-%a1 = zeros([ydim,xdim,tdim]);
+s1 = nan([ydim,xdim,tdim]);
+l1 = nan([ydim,xdim,tdim]);
+a1 = nan([ydim,xdim,tdim]);
 %a2 = zeros([ydim,xdim,tdim]);
 for t =1:tdim
     t

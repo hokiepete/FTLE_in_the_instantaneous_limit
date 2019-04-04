@@ -1,12 +1,13 @@
 close all
 clear all
 clc
-load FTLE_mv_short
+%load FTLE_wrf_short
+load FTLE_MV
 load error_comparison_terms
 s1 = s1(:,:,end);
-l1 = l1(:,:,1);
-a1 = a1(:,:,1);
-a2 = a2(:,:,1);
+l1 = l1(:,:,end);
+a1 = a1(:,:,end);
+a2 = a2(:,:,end);
 T
 i=0;
 s1 = s1((i+1):end-i,(i+1):end-i,1);
@@ -74,16 +75,16 @@ for i =1:n_t
 end
 T=T/3600;
 figure
-subplot(121)
-hold on
-plot(abs(T),corr1,'r.-')
-plot(abs(T),corr2,'b.-')
-plot(abs(T),corra1,'k.-')
+%subplot(121)
+%hold on
+plot(abs(T(1:180)),corr1(1:180),'r.-')
+%plot(abs(T),corr2,'b.-')
+%plot(abs(T),corra1,'k.-')
 legend('-s1','-s1-O(T)','-s1-O(T^2)','Location','northwest')
-ylabel('RMSE s^{-1}')
-xlabel('|T| s')
-title('lambda2 = X0^T*Q*X0 + X0^T*B*X1 - X0^T*S*X1')
-
+ylabel('Correlation')
+xlabel('|T| hr')
+title('Martha`s vinyard')
+%{
 subplot(122)
 hold on
 plot(abs(T),corr1,'r.-')
@@ -93,8 +94,8 @@ legend('-s1','-s1-O(T)','-s1-O(T^2)','Location','northwest')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
 title('lambda2 = X0^T*Q*X0-d.^2/m')
-
-%
+%}
+%{
 figure
 subplot(121)
 hold on

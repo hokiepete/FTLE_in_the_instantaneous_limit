@@ -2,17 +2,17 @@ close all
 clear all
 clc
 
-xdim = 101
-tdim = 101
-yzdim = 51
-t0 = 0
-tf = -0.96
+xdim = 301
+%tdim = 101
+yzdim = 151
+%t0 = 0
+%tf = -0.96
 x = linspace(0,2,xdim);
 dx=x(2)-x(1);
 yz = linspace(0,1,yzdim);
 dy=yz(2)-yz(1);
 dz=dy;
-twant = linspace(t0,tf,tdim);
+%twant = linspace(t0,tf,tdim);
 [x,y,z]=meshgrid(x,yz,yz);
 
 A = 0.1;
@@ -106,7 +106,7 @@ for t =1:tdim
 end
 
 save dg_correction3rd s1 l1 l2
-save dg_error_comparison s1 l1 a1 twant%a2% dd db
+save dg_error_comparison s1 l1 a1%a2% dd db
 %{
 figure
 subplot(421)
