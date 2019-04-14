@@ -2,13 +2,14 @@ close all
 clear all
 clc
 load abc_sigma_big%_big_ex_short
-%load dg_sigma_big_long
+%load abc_sigma_shorttime
 load abc_error_comparison
 %
 
 s1 = s1(:,:,:,2);
 l1 = l1(:,:,:,2);
 a1 = a1(:,:,:,2);
+%a1(abs(a1)>10)=nan;
 %a1(abs(a1)>1e1)=nan;
 figure
 sigma(1,:,:,:)=-s1;
@@ -75,7 +76,7 @@ m2=1
 m3=1
 figure
 hold on
-plot(abs(T),rmse1,'r.-')
+%plot(abs(T),rmse1,'r.-')
 plot(abs(T),rmse2,'b.-')
 plot(abs(T),rmsea1,'k.-')
 %plot(abs(T),abs(T).^1,'r--')
@@ -83,7 +84,7 @@ plot(abs(T),rmsea1,'k.-')
 %plot(abs(T),m3*abs(T).^3,'k--')
 
 %xlim([0.,0.5])
-legend('-s1','-s1-O(T)','-s1-O(T^2)','Location','northwest')
+legend('-s1-O(T)','-s1-O(T^2)','Location','northwest')
 ylabel('RMSE s^{-1}')
 xlabel('|T| s')
 title('lambda2 = X0^T*Q*X0 + X0^T*B*X1 - X0^T*S*X1')
@@ -126,7 +127,8 @@ set(gca, 'XScale', 'log')
 %}
 rmse3=rmsea1;
 time = T;
-save dg3d_plot_data_shortime rmse1 rmse2 rmse3 time
+%save abc_plot_data_shortime rmse1 rmse2 rmse3 time
+save abc_plot_data_big rmse1 rmse2 rmse3 time
 %}
 %}
 %}

@@ -2,15 +2,11 @@ close all
 clear all
 clc
 
-dim = 96
-tdim = 96
-t0 = 0
-tf = -0.84
+dim = 48
 x = linspace(0,2*pi,dim);
 dx=x(2)-x(1);
 dy=dx;
 dz=dy;
-twant = linspace(t0,tf,tdim);
 
 [x,y,z]=meshgrid(x,x,x);
 
@@ -71,7 +67,8 @@ for t =1:tdim
                     l1(i,j,k,t) = X0'*B*X0;
                     %
                     X1 = pinv((S-s1(i,j,k,t)*eye(size(B))))*(-((B-l1(i,j,k,t)*eye(size(B)))*X0));
-
+                    %X1 = -((B-l1(i,j,k,t)*eye(size(B)))*X0)\(S-s1(i,j,k,t)*eye(size(B)));
+                    %X1=X1';
                     l2(i,j,k,t) = X0'*Q*X0 + X0'*B*X1 - l1(i,j,k,t).*X0'*X1;
                     %db(i,j,k,t) = X0'*B*X1 - X0'*S*X1;
                     a1(i,j,k,t)=l2(i,j,k,t);
@@ -99,9 +96,10 @@ for t =1:tdim
 end
 
 save abc_correction3rd s1 l1 l2
-save abc_error_comparison s1 l1 a1 twant%a2% dd db
-figure
-vol3d_v2('cdata',a1)
+save abc_error_comparison s1 l1 a1% twant%a2% dd db
+figure;
+colormap('jet');
+vol3d_v2('cdata',a1(:,:,:,1))
 
 %{
 figure
