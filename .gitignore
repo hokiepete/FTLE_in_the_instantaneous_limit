@@ -22,3 +22,4 @@ ftle_80m_small.nc
 MV/windage_ftle.nc
 MV/windagedata.nc
 MV/mv_ftle.nc
+*.nc
