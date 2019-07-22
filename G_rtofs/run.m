@@ -24,8 +24,9 @@ v(v>1e10)=nan;
 %v(lon>365)=nan;
 netcdf.close(ncid);
 %lon = mod(lon-min(min(lon)),365);
+[x,y]=ndgrid(x,y);
 figure
-surface(lon,lat,sqrt(u.^2+v.^2),'edgecolor','none');
+surface(x,y,sqrt(u.^2+v.^2),'edgecolor','none');
 colorbar
 axis tight
 title('speed')
