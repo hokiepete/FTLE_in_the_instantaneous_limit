@@ -296,6 +296,40 @@ m.drawcoastlines()
 plt.savefig('{:04d}_all.png'.format(000))
 plt.close('all')
 #size_a = []
+pp = aridge.collections[1].get_paths()
+qq = rridge.collections[1].get_paths()
+for p2 in [74,79,119,155,160,214]:#,255range(len(pp)):
+    v = pp[p2].vertices
+    x = v[:,0]
+    y = v[:,1]
+    #size_a.append(x.size)
+    if x.size >= 20:
+        m.plot(x,y,'b-')#, latlon=True)
+        #m.drawcoastlines()
+        #plt.title('{:04d}'.format(p))
+        #plt.savefig('{:03d}_attracting.png'.format(p))
+        #plt.close('all')
+    
+        #size_r=[]
+for q2 in [58,75,96,118,185,220,315]:#,309]: #:range(len(qq)):
+    v = qq[q2].vertices
+    x = v[:,0]
+    y = v[:,1]
+    #size_r.append(x.size)
+    if x.size >= 15:
+        m.plot(x,y,'r-')#, latlon=True)
+        #m.drawcoastlines()
+        #plt.title('{:04d}'.format(p))
+        #plt.savefig('{:03d}_repelling.png'.format(p))
+        #plt.close('all')
+m.drawcoastlines()
+plt.title('{:04d}'.format(p2))
+plt.savefig('attracting{:03d}.png'.format(p2))
+#plt.close('all')
+
+
+
+"""
 print('attracting')
 pp = aridge.collections[1].get_paths()
 qq = rridge.collections[1].get_paths()
@@ -317,7 +351,7 @@ for p in range(len(pp)):
                 #plt.close('all')
     
         #size_r=[]
-        for q2 in range(len(qq)):
+        for q2 in [58,75,96,118,185,220,309,315]: #:range(len(qq)):
             v = qq[q2].vertices
             x = v[:,0]
             y = v[:,1]
@@ -332,7 +366,7 @@ for p in range(len(pp)):
         plt.title('{:04d}'.format(p))
         plt.savefig('attracting{:03d}.png'.format(p))
         plt.close('all')
-        
+
 print('repelling')        
 for q in range(len(qq)):
     v = qq[q].vertices
@@ -368,7 +402,7 @@ for q in range(len(qq)):
         plt.savefig('repelling{:03d}.png'.format(q))
         plt.close('all')
 
-
+"""
 
 
 
