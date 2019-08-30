@@ -1,5 +1,5 @@
 import hdf5storage as h
-from numpy import linspace
+import numpy as np
 import matplotlib.pyplot as p
 import matplotlib
 
@@ -22,7 +22,7 @@ y=np.linspace(0,1,dim[0])
 x,y = np.meshgrid(x,y)
 t0 = 0
 tf = -1
-time = linspace(t0,tf,101)
+time = np.linspace(t0,tf,101)
 f=h.loadmat('dg_sigma_big.mat')
 sig=f['sigma']
 """
@@ -62,22 +62,22 @@ p.savefig('dg_ftle_vs_s1_v2.png', transparent=False, bbox_inches='tight',pad_inc
 i = 31
 p.close('all')
 width =5+3/8
-p.figure(figsize=(width,width/3))
+p.figure(figsize=(width,0.5*width/3))
 p.subplot(121)
 ft=sig[:,:,i]
-p.contourf(x,y,ft,levels=linspace(ft.min(),ft.max(),301))
+p.contourf(x,y,ft,levels=np.linspace(ft.min(),ft.max(),301))
 p.xlabel('x',**labelfont)
 p.ylabel('y',**labelfont)
 cbar=p.colorbar()        
-cbar.set_ticks(linspace(0,1,6))
+cbar.set_ticks(np.linspace(0,1,6))
 #cbar.set_yticklabels(linspace(0,1,11))
 p.subplot(122)
 approx=-s1-time[i]*(-s1**2+0.5*l1)#+time[i]**2*(4/3*s1**3-s1*l1+0.25*l2)
-p.contourf(x,y,approx,levels=linspace(approx.min(),approx.max(),301))
+p.contourf(x,y,approx,levels=np.linspace(approx.min(),approx.max(),301))
 p.yticks([])
 p.xlabel('x',**labelfont)
 cbar=p.colorbar()        
-cbar.set_ticks(linspace(0,1,6))
+cbar.set_ticks(np.linspace(0,1,6))
 
 
 

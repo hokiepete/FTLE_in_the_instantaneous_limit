@@ -160,7 +160,6 @@ meridians = np.arange(round(lon.max(),0),lon.min()-2,-2)
 aridge = m.contour(lon,lat,adirdiv,levels=0,latlon=True,colors='blue')
 rridge = m.contour(lon,lat,rdirdiv,levels=0,latlon=True,colors='red')
 #plt.close('all')
-
 pp = aridge.collections[0].get_paths()
 for p in [13,17,40,46,47,55]:
     v = pp[p].vertices
@@ -288,48 +287,74 @@ with open("ridge.txt", "w", newline='') as f:
 
 #'''
 
-adirdiv = np.ma.masked_where(-s1<=np.percentile(-s1[~np.isnan(s1)],60),adirdiv)
-rdirdiv = np.ma.masked_where(s2<=np.percentile(s2[~np.isnan(s2)],60),rdirdiv)
+
+
+adirdiv = np.ma.masked_where(-s1<=np.percentile(-s1[~np.isnan(s1)],65),adirdiv)
+rdirdiv = np.ma.masked_where(s2<=np.percentile(s2[~np.isnan(s2)],65),rdirdiv)
+
+import os
+import glob
+
+files = glob.glob('*.png')
+for f in files:
+    os.remove(f)
+
 aridge = m.contour(lon,lat,adirdiv,levels=0,latlon=True,colors='blue')
 rridge = m.contour(lon,lat,rdirdiv,levels=0,latlon=True,colors='red')
 m.drawcoastlines()
 plt.savefig('{:04d}_all.png'.format(000))
 plt.close('all')
+
 #size_a = []
+theta = np.linspace(0,2*np.pi,101)
+#7-8-2019
+#px = [225830,350674,494974,626303,771414,917335]
+#py = [503251,237349,228432,327334,147364,422994]
+#7-25-2019
+px = [48292,152058,486867,718720,727638,442280,489299]
+py = [355708,240592,607017,581076,412455,294097,260048]
+
+r = 25000
+
+x = [r*np.cos(theta)+px_i for px_i in px]
+y = [r*np.sin(theta)+py_i for py_i in py]
+#x = r*np.cos(theta)+px
+#y = r*np.sin(theta)+py
+m.scatter(x,y)
+from hdf5storage import savemat
+x_o = np.asarray(x)#np.array([x[0],x[1],x[2],x[3],x[4],x[5],x[6]])
+y_o = np.asarray(y)#np.array([y[0],y[1],y[2],y[3],y[4],y[5],y[6]])
+savemat('tracers.mat',{'x':x_o,'y':y_o})
+a=[36,48,54,65,83,137]
+r=[55,64,85,107,127]
 pp = aridge.collections[1].get_paths()
 qq = rridge.collections[1].get_paths()
-for p2 in [74,79,119,155,160,214]:#,255range(len(pp)):
+for p2 in a:#,255range(len(pp)):
     v = pp[p2].vertices
     x = v[:,0]
     y = v[:,1]
+    savemat('a_{:03d}.mat'.format(p2),{'x':x,'y':y})
     #size_a.append(x.size)
-    if x.size >= 20:
-        m.plot(x,y,'b-')#, latlon=True)
-        #m.drawcoastlines()
-        #plt.title('{:04d}'.format(p))
-        #plt.savefig('{:03d}_attracting.png'.format(p))
-        #plt.close('all')
+    m.plot(x,y,'b-')#, latlon=True)
     
         #size_r=[]
-for q2 in [58,75,96,118,185,220,315]:#,309]: #:range(len(qq)):
+for q2 in r:#,309]: #:range(len(qq)):
     v = qq[q2].vertices
     x = v[:,0]
     y = v[:,1]
+    savemat('r_{:03d}.mat'.format(q2),{'x':x,'y':y})
     #size_r.append(x.size)
-    if x.size >= 15:
-        m.plot(x,y,'r-')#, latlon=True)
-        #m.drawcoastlines()
-        #plt.title('{:04d}'.format(p))
-        #plt.savefig('{:03d}_repelling.png'.format(p))
-        #plt.close('all')
+    m.plot(x,y,'r-')#, latlon=True)
 m.drawcoastlines()
 plt.title('{:04d}'.format(p2))
 plt.savefig('attracting{:03d}.png'.format(p2))
 #plt.close('all')
-
+#"""
 
 
 """
+a_thresh = 12
+r_thresh = 12
 print('attracting')
 pp = aridge.collections[1].get_paths()
 qq = rridge.collections[1].get_paths()
@@ -337,13 +362,13 @@ for p in range(len(pp)):
     v = pp[p].vertices
     xx = v[:,0]
     yy = v[:,1]
-    if xx.size >= 20:
+    if xx.size >= a_thresh:
         for p2 in range(len(pp)):
             v = pp[p2].vertices
             x = v[:,0]
             y = v[:,1]
             #size_a.append(x.size)
-            if x.size >= 20:
+            if x.size >= a_thresh:
                 m.plot(x,y,'b-')#, latlon=True)
                 #m.drawcoastlines()
                 #plt.title('{:04d}'.format(p))
@@ -351,12 +376,12 @@ for p in range(len(pp)):
                 #plt.close('all')
     
         #size_r=[]
-        for q2 in [58,75,96,118,185,220,309,315]: #:range(len(qq)):
+        for q2 in range(len(qq)): #[58,75,96,118,185,220,309,315]:
             v = qq[q2].vertices
             x = v[:,0]
             y = v[:,1]
             #size_r.append(x.size)
-            if x.size >= 15:
+            if x.size >= r_thresh:
                 m.plot(x,y,'r-')#, latlon=True)
                 #m.drawcoastlines()
                 #plt.title('{:04d}'.format(p))
@@ -372,13 +397,13 @@ for q in range(len(qq)):
     v = qq[q].vertices
     xx = v[:,0]
     yy = v[:,1]
-    if xx.size >= 15:
+    if xx.size >= r_thresh:
         for p2 in range(len(pp)):
             v = pp[p2].vertices
             x = v[:,0]
             y = v[:,1]
             #size_a.append(x.size)
-            if x.size >= 20:
+            if x.size >= a_thresh:
                 m.plot(x,y,'b-')#, latlon=True)
                 #m.drawcoastlines()
                 #plt.title('{:04d}'.format(p))
@@ -391,7 +416,7 @@ for q in range(len(qq)):
             x = v[:,0]
             y = v[:,1]
             #size_r.append(x.size)
-            if x.size >= 15:
+            if x.size >= r_thresh:
                 m.plot(x,y,'r-')#, latlon=True)
                 #m.drawcoastlines()
                 #plt.title('{:04d}'.format(p))
@@ -402,10 +427,29 @@ for q in range(len(qq)):
         plt.savefig('repelling{:03d}.png'.format(q))
         plt.close('all')
 
+#"""
 """
+a_thresh = 12
+r_thresh = 12
+print('attracting')
+pp = aridge.collections[1].get_paths()
+qq = rridge.collections[1].get_paths()
+for p in [36,48,54,65,83,137]:#range(len(pp)):
+    v = pp[p].vertices
+    xx = v[:,0]
+    yy = v[:,1]
+    m.plot(xx,yy,'r-')
 
+print('repelling')        
+for q in [55,64,85,107,127]:#range(len(qq)):
+    v = qq[q].vertices
+    xx = v[:,0]
+    yy = v[:,1]
+    m.plot(xx,yy,'b-')
 
+plt.savefig('repelling{:03d}.png'.format(q))
 
+"""
 
 
 

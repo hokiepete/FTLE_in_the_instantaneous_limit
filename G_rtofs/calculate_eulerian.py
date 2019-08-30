@@ -9,7 +9,7 @@ plt.close('all')
 #-90E
 
 
-root = Dataset('data/07_08_2019/rtofs_glo_2ds_f000_1hrly_prog.nc','r')
+root = Dataset('data/07_25_2019/rtofs_glo_2ds_f000_1hrly_prog.nc','r')
 vars = root.variables #dictionary, all variables in dataset\
 lon = vars['Longitude'][:-1,:]-360
 lat = vars['Latitude'][:-1,:]
