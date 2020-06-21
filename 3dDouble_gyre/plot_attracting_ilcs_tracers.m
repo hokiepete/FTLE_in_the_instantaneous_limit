@@ -39,8 +39,8 @@ lims = [0,0,0;
 ];
 %0,0,1;
 %2,1,1
-n=31;
-tend=30
+n=25;
+tend=10
 twant = linspace(0,tend,n);
 for i = 1:length(x1)
     y01=[x1(i),y1(i),z1(i)];
@@ -123,10 +123,10 @@ end
 
 %}
 close(v)
-az2 = 120%28%47
-el2 = 15%29%35
-az = -60%-190%-25
-el =15% 21
+az = 120%28%47
+el = 15%29%35
+az2 = -11%-60%-190%-25
+el2 = 70%15% 21
 alpT = 1.0
 alpS = 0.6
 font = 'cmr'
@@ -144,6 +144,7 @@ trisurf(triboundary1,xx1(i,:)',yy1(i,:)',zz1(i,:)','FaceColor', 'green','edgecol
 xlabel('x')
 ylabel('y')
 zlabel('z')
+title('t=0')
 %set(gca, 'XTick',[2,3])
 %set(gca, 'YTick',[3,4])
 camlight
@@ -163,6 +164,7 @@ trisurf(triboundary1,xx1(i,:)',yy1(i,:)',zz1(i,:)','FaceColor', 'green','edgecol
 xlabel('x')
 ylabel('y')
 zlabel('z')
+title('t=0')
 %set(gca, 'XTick',[2,3])
 %set(gca, 'YTick',[3,4])
 camlight
@@ -182,6 +184,7 @@ trisurf(triboundary1,xx1(i,:)',yy1(i,:)',zz1(i,:)','FaceColor', 'green','edgecol
 xlabel('x')
 ylabel('y')
 zlabel('z')
+title('t=1.25')
 camlight
 lighting gouraud
 %axis([0,2,0,1,0,1])
@@ -199,13 +202,14 @@ trisurf(triboundary1,xx1(i,:)',yy1(i,:)',zz1(i,:)','FaceColor', 'green','edgecol
 xlabel('x')
 ylabel('y')
 zlabel('z')
+title('t=1.25')
 camlight
 lighting gouraud
 %axis([0,2,0,1,0,1])
 axis equal tight;
 view(az2,el2)
 
-saveas(fig,'attracting_ilcs_v4.eps','epsc')
+saveas(fig,'attracting_ilcs_v5.eps','epsc')
 %{
 i = n
 subplot(3,2,5)

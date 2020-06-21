@@ -150,6 +150,7 @@ trisurf(triboundary2,xx2(i,:)',yy2(i,:)',zz2(i,:)','FaceColor', 'green','edgecol
 xlabel('x')
 ylabel('y')
 zlabel('z')
+title('t=0')
 set(gca, 'XTick',[2,3])
 %set(gca, 'YTick',[3,4])
 %title(sprintf('time = %1.3f',twant(i)))
@@ -176,6 +177,7 @@ trisurf(triboundary2,xx2(i,:)',yy2(i,:)',zz2(i,:)','FaceColor', 'green','edgecol
 xlabel('x')
 ylabel('y')
 zlabel('z')
+title('t=0')
 set(gca, 'XTick',[2,3])
 %set(gca, 'YTick',[3,4])
 %title(sprintf('time = %1.3f',twant(i)))
@@ -203,6 +205,7 @@ trisurf(triboundary2,xx2(i,:)',yy2(i,:)',zz2(i,:)','FaceColor', 'green','edgecol
 xlabel('x')
 ylabel('y')
 zlabel('z')
+title('t=1.3')
 %title(sprintf('time = %1.3f',twant(i)))%,'FontName','Stencil')
 camlight
 lighting gouraud
@@ -227,6 +230,7 @@ trisurf(triboundary2,xx2(i,:)',yy2(i,:)',zz2(i,:)','FaceColor', 'green','edgecol
 xlabel('x')
 ylabel('y')
 zlabel('z')
+title('t=1.3')
 %title(sprintf('time = %1.3f',twant(i)))
 camlight
 lighting gouraud
@@ -237,7 +241,8 @@ axis equal tight
 view(az2,el2)
 %view(20,20)
 %}
-saveas(fig,'repelling_ilcs_v3.eps','epsc')
+saveas(fig,'repelling_ilcs_v5.eps','epsc')
+saveas(fig,'repelling_ilcs_v5.png')
 %{
 i = n
 subplot(3,2,5)

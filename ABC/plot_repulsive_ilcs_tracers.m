@@ -247,7 +247,8 @@ axis equal tight
 view(az2,el2)
 %view(20,20)
 %}
-saveas(fig,'repelling_ilcs_v4.eps','epsc')
+saveas(fig,'repelling_ilcs_v5.png')
+saveas(fig,'repelling_ilcs_v5.eps','epsc')
 %{
 i = n
 subplot(3,2,5)

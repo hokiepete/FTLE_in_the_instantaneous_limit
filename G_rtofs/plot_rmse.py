@@ -203,7 +203,30 @@ ax1.ticklabel_format(style='sci',axis='y', scilimits=(0,0))
 plt.savefig('rtofs_rmse.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
 plt.savefig('rtofs_rmse.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
 
-del f
+
+width = 1#5+3/8
+height = 4.5/1.61803399
+figSize = (width,height)
+
+f = sio.loadmat('wrf_plot_rmse_data.mat')
+t = np.log(abs(f['time'][0][0:]))
+rmse3 = np.log(f['rmse3'][0][0:]*3600)
+rmse2 = np.log(f['rmse2'][0][0:]*3600)
+rmse1 = np.log(f['rmse1'][0][0:]*3600)
+
+fig = plt.figure(figsize=figSize)
+ax = fig.add_subplot(111)
+plt.plot(t,rmse1,'b-')
+plt.plot(t,rmse2,'m-')
+plt.plot(t,rmse3,'k-')
+plt.ylabel('FTLE field root mean-squared error',**labelfont)
+plt.xlabel('$|T|$',**labelfont)
+plt.axis('tight')
+ax.grid()
+ax.ticklabel_format(style='sci',axis='y', scilimits=(0,0))
+
+plt.savefig('rtofs_rmse_log.png', transparent=False, bbox_inches='tight',pad_inches=0.03)
+plt.savefig('rtofs_rmse_log.eps', transparent=False, bbox_inches='tight',pad_inches=0.03)
 
 
 #'''
